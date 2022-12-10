@@ -41,13 +41,18 @@ const HomeScreen = ({ navigation }) => {
           </View>
 
           {/* delete when done */}
-          {/* <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("login");
-          }}
-        >
-          <Text>Go back</Text>
-        </TouchableOpacity> */}
+          <TouchableOpacity
+            style={{
+              justifyContent: "center",
+              alignContent: "center",
+              alignItems: "center",
+            }}
+            onPress={() => {
+              navigation.navigate("login");
+            }}
+          >
+            <Text>Go back</Text>
+          </TouchableOpacity>
           {/* <TouchableOpacity
           onPress={() => {
             getAuth().currentUser.delete();
