@@ -9,6 +9,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
+  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -35,44 +36,80 @@ const SignupScreen = () => {
   const [phoneNum, setPhoneNum] = useState("");
   const [password, setPassword] = useState("");
   const [repassword, setRepassword] = useState("");
+  const [error1, setError] = useState("");
 
   function validateEmail(email) {
     var re = /\S+@\S+\.\S+/;
     return re.test(email);
   }
-  const checkValid = () => {
-    if (
-      firstName &&
-      lastName &&
-      email &&
-      phoneNum &&
-      password &&
-      repassword &&
-      phoneNum.length == 8 &&
-      password == repassword &&
-      validateEmail(email)
-    ) {
-      return true;
+
+  const reset = () => {
+    setPassword("");
+    setRepassword("");
+  };
+
+  function validatePassword() {
+    if (password && repassword) {
+      //user must enter a password with more than 8 chars, at least an uppercase, lowercase, special case and number
+      if (password.length < 8) {
+        setError("Please enter a password \nmore than 8 characters");
+        reset(); return false;
+      } else if (!/^(?=.*[0-9])/.test(password)) {
+        setError("Please enter a password \ncontaining at least one NUMBER");
+        reset(); return false;
+      } else if (!/^(?=.*[A-Z])/.test(password)) {
+        setError(
+          "Please enter a password containing \nat least one UPPERCASE character"
+        ); return false;
+        reset();
+      } else if (!/^(?=.*[a-z])/.test(password)) {
+        setError(
+          "Please enter a password containing \nat least one LOWERCASE character"
+        ); return false;
+        reset();
+      } else if (!/^(?=.*[!@#$%^&*])/.test(password)) {
+        setError(
+          "Please enter a password containing \nat least one SPECIAL CASE"
+        ); return false;
+        reset();
+      } else if (password !== repassword) {
+        setError("Please enter the SAME passwords!");
+        reset(); return false;
+      }
     } else {
+      setError("Password field is empty!");
       return false;
     }
+    return true;
+  }
+
+  const checkValid = () => {
+    return (
+      firstName &&
+      lastName &&
+      phoneNum &&
+      phoneNum.length == 8 &&
+      validateEmail(email)
+    );
   };
 
   const handleSignup = () => {
     if (checkValid()) {
-      createUserWithEmailAndPassword(authentication, email, password)
-        .then(async (userCredentials) => {
-          const user = userCredentials.user;
-          await setDoc(doc(db, "users", user.uid), {
-            email: email,
-            fName: firstName,
-            lName: lastName,
-            phoneNum: phoneNum,
-          }).catch((error) => {
-            console.log(error);
-          });
-        })
-        .catch((error) => alert(error.message));
+      if (validatePassword()) {
+        createUserWithEmailAndPassword(authentication, email, password)
+          .then(async (userCredentials) => {
+            const user = userCredentials.user;
+            await setDoc(doc(db, "users", user.uid), {
+              email: email,
+              fName: firstName,
+              lName: lastName,
+              phoneNum: phoneNum,
+            }).catch((error) => {
+              console.log(error);
+            });
+          })
+          .catch((error) => alert(error.message));
+      }
     } else {
       Alert.alert("Error", "Please enter valid information");
     }
@@ -98,6 +135,7 @@ const SignupScreen = () => {
               placeholderTextColor="black"
               onChangeText={(text) => setFirstName(text)}
               autoCapitalize="none"
+              autoCorrect={false}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -107,6 +145,7 @@ const SignupScreen = () => {
               placeholderTextColor="black"
               onChangeText={(text) => setLastName(text)}
               autoCapitalize="none"
+              autoCorrect={false}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -116,6 +155,7 @@ const SignupScreen = () => {
               placeholderTextColor="black"
               onChangeText={(text) => setPhoneNum(text)}
               autoCapitalize="none"
+              autoCorrect={false}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -125,30 +165,36 @@ const SignupScreen = () => {
               placeholderTextColor="black"
               onChangeText={(text) => setEmail(text)}
               autoCapitalize="none"
+              autoCorrect={false}
             />
           </View>
           <View style={styles.inputContainer}>
             <TextInput
-              style={styles.inputText}
+              secureTextEntry={true}
               placeholder="Password"
               placeholderTextColor="black"
-              onChangeText={(text) => setPassword(text)}
+              value={password}
+              onChangeText={(e) => setPassword(e)}
               autoCapitalize="none"
+              autoCorrect={false}
             />
           </View>
           <View style={styles.inputContainer}>
             <TextInput
-              style={styles.inputText}
+              secureTextEntry={true}
               placeholder="Re-enter Password"
               placeholderTextColor="black"
-              onChangeText={(text) => setRepassword(text)}
+              value={repassword}
+              onChangeText={(e) => setRepassword(e)}
               autoCapitalize="none"
+              autoCorrect={false}
             />
-          </View>
-
+          </View> 
+          {error1 && <Text style={styles.error}>{error1}</Text>}
           <TouchableOpacity style={styles.signupbutton} onPress={handleSignup}>
             <Text style={styles.signuptext}>SIGN UP</Text>
           </TouchableOpacity>
+          
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -172,6 +218,11 @@ const styles = StyleSheet.create({
   },
   inputText: {
     padding: 13,
+  },
+  error: {
+    textAlignVertical: "center",
+    textAlign: "center",
+    color: 'red'
   },
   signupbutton: {
     width: 100,
