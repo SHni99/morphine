@@ -15,6 +15,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 const { height, width } = Dimensions.get("screen");
 import { Ionicons } from "@expo/vector-icons";
 import { DrawerActions } from "@react-navigation/native";
+import { Feather } from "@expo/vector-icons";
 
 const HomeScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
@@ -35,8 +36,11 @@ const HomeScreen = ({ navigation }) => {
             <Text style={styles.weclometext}>
               Welcome {user ? user.fName : ""}
             </Text>
-            <TouchableOpacity style={styles.settingBtn}>
-              <Ionicons name="settings-outline" size={24} color="black" />
+            <TouchableOpacity
+              style={styles.settingBtn}
+              onPress={() => navigation.openDrawer()}
+            >
+              <Feather name="menu" size={24} color="black" />
             </TouchableOpacity>
           </View>
 

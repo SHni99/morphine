@@ -1,16 +1,15 @@
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
-import * as Screens from "../../screens/index";
+import * as Screens from "../screens/index";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
-
 const Tab = createBottomTabNavigator();
 
-const BottomTab = () => {
+const BottomTab = ({ navigation }) => {
   return (
     <Tab.Navigator
-      initialRouteName="home"
+      initialRouteName="homes"
       screenOptions={{
         headerShown: false,
         tabBarShowLabel: false,
@@ -34,7 +33,7 @@ const BottomTab = () => {
             >
               <AntDesign
                 name="contacts"
-                size={24}
+                size={20}
                 color={focused ? "#171E4A" : "#A3A3BD"}
               />
               <Text
@@ -52,7 +51,7 @@ const BottomTab = () => {
         }}
       />
       <Tab.Screen
-        name="home"
+        name="homes"
         component={Screens.HomeScreen}
         options={{
           tabBarIcon: ({ focused }) => (
@@ -65,7 +64,7 @@ const BottomTab = () => {
             >
               <AntDesign
                 name="home"
-                size={24}
+                size={20}
                 color={focused ? "#171E4A" : "#A3A3BD"}
               />
               <Text
@@ -96,7 +95,7 @@ const BottomTab = () => {
             >
               <Feather
                 name="map-pin"
-                size={24}
+                size={20}
                 color={focused ? "#171E4A" : "#A3A3BD"}
               />
               <Text
