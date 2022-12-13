@@ -49,6 +49,7 @@ const LoginScreen = () => {
               placeholder="Email"
               placeholderTextColor="black"
               onChangeText={(email) => setEmail(email)}
+              autoCorrect={false}
             />
           </View>
           <View style={styles.inputContainer}>
@@ -58,6 +59,7 @@ const LoginScreen = () => {
               placeholderTextColor="black"
               secureTextEntry={true}
               autoCapitalize="none"
+              autoCorrect={false}
               onChangeText={(password) => setPassword(password)}
             />
           </View>

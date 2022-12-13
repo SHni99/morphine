@@ -53,25 +53,30 @@ const SignupScreen = () => {
       //user must enter a password with more than 8 chars, at least an uppercase, lowercase, special case and number
       if (password.length < 8) {
         setError("Please enter a password \nmore than 8 characters");
-        reset(); return false;
+        reset(); 
+        return false;
       } else if (!/^(?=.*[0-9])/.test(password)) {
         setError("Please enter a password \ncontaining at least one NUMBER");
-        reset(); return false;
+        reset(); 
+        return false;
       } else if (!/^(?=.*[A-Z])/.test(password)) {
         setError(
           "Please enter a password containing \nat least one UPPERCASE character"
-        ); return false;
+        ); 
         reset();
+        return false;
       } else if (!/^(?=.*[a-z])/.test(password)) {
         setError(
           "Please enter a password containing \nat least one LOWERCASE character"
-        ); return false;
+        ); 
         reset();
+        return false;
       } else if (!/^(?=.*[!@#$%^&*])/.test(password)) {
         setError(
           "Please enter a password containing \nat least one SPECIAL CASE"
-        ); return false;
-        reset();
+        ); 
+        reset(); 
+        return false;
       } else if (password !== repassword) {
         setError("Please enter the SAME passwords!");
         reset(); return false;

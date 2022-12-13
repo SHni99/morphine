@@ -1,13 +1,57 @@
 import React from "react";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerItem,
+  DrawerItemList,
+  DrawerContentScrollView,
+} from "@react-navigation/drawer";
 import * as Screens from "../screens/index";
 import BottomTab from "./BottomTab";
 import { AntDesign } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { useNavigation } from "@react-navigation/native";
+
 const Drawer = createDrawerNavigator();
 
-function DrawerNavigator() {
+const DrawerNavigator = () => {
+  const navigation = useNavigation();
+  const handleSignOut = () => {
+    const auth = getAuth();
+    signOut(auth)
+      .then(() => {
+        onAuthStateChanged(auth, (user) => {
+          if (user) {
+            console.log(`Signed out of ${user.email}`);
+          }
+        });
+        navigation.navigate("login");
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
+
+  function CustomDrawerContent(props) {
+    return (
+      <DrawerContentScrollView {...props}>
+        <DrawerItemList {...props} />
+        <DrawerItem
+          label="Log out"
+          onPress={handleSignOut}
+          icon={({ focused }) => {
+            return <AntDesign
+              name="logout"
+              size={18}
+              color={focused ? "white" : "grey"}
+            />;
+          }}
+        />
+      </DrawerContentScrollView>
+    );
+  }
+
   return (
     <Drawer.Navigator
       initialRouteName="Home"
@@ -17,6 +61,7 @@ function DrawerNavigator() {
         drawerActiveBackgroundColor: "#43356B",
         drawerActiveTintColor: "white",
       }}
+      drawerContent={(props) => <CustomDrawerContent {...props} />}
     >
       <Drawer.Screen
         name="Home"
@@ -50,6 +95,6 @@ function DrawerNavigator() {
       />
     </Drawer.Navigator>
   );
-}
+};
 
 export default DrawerNavigator;
