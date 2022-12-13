@@ -13,6 +13,7 @@ import React, { useState, useEffect } from "react";
 import { StackActions, useNavigation } from "@react-navigation/native";
 import { authentication } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
+import Toast from "react-native-root-toast";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -24,6 +25,14 @@ const LoginScreen = () => {
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(`Signed in with ${user.email}`);
+        let toast = Toast.show('Successfully signed in', {
+          duration: Toast.durations.SHORT,
+          backgroundColor: 'green',
+        });
+        
+        setTimeout(function hideToast() {
+          Toast.hide(toast);
+        }, 1500);
         navigation.navigate("hometab");
       })
       .catch((error) => alert(error.message));
