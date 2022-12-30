@@ -40,33 +40,35 @@ const HomeScreen = ({ navigation }) => {
               style={styles.settingBtn}
               onPress={() => navigation.openDrawer()}
             >
-              <Feather name="menu" size={24} color="black" />
+              <Feather name="menu" size={24} color="grey" />
             </TouchableOpacity>
           </View>
 
           {/* delete when done */}
-          <TouchableOpacity
-            style={{
-              justifyContent: "center",
-              alignContent: "center",
-              alignItems: "center",
-            }}
-            onPress={() => {
-              navigation.navigate("login");
-            }}
-          >
-            <Text>Go back</Text>
-          </TouchableOpacity>
-          {/* <TouchableOpacity
+          <View style={{ alignItems: "center", top: 200 }}>
+            <TouchableOpacity
+              style={{
+                // justifyContent: "center",
+                // alignContent: "center",
+                alignSelf: "center",
+              }}
+              onPress={() => {
+                navigation.navigate("login");
+              }}
+            >
+              <Text>Go back</Text>
+            </TouchableOpacity>
+            {/* <TouchableOpacity
           onPress={() => {
             getAuth().currentUser.delete();
           }}
         >
           <Text>Delete acc</Text>
         </TouchableOpacity> */}
-          <View style={styles.mainContainer}>
-            <Text>Battery Percentage of device here</Text>
-            <Text>Maybe recent contacts here as well</Text>
+            <View style={styles.mainContainer}>
+              <Text>Battery Percentage of device here</Text>
+              <Text>Maybe recent contacts here as well</Text>
+            </View>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -76,22 +78,21 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    // justifyContent: "center",
   },
   welcomecontainer: {
-    display: "flex",
-    bottom: 280,
+    // left: 40,
+    top: 12,
     flexDirection: "row",
-    // backgroundColor: "grey",
-    width: "100%",
     alignItems: "center",
+    justifyContent: "space-between",
+    marginLeft: 20,
+    marginRight: 20,
   },
   weclometext: {
     fontSize: 25,
     letterSpacing: -1,
     fontWeight: "500",
-    marginRight: 100,
   },
   drawertxt: {
     // left: 130,
@@ -100,9 +101,6 @@ const styles = StyleSheet.create({
     // flex: 1,
     justifyContent: "center",
     alignItems: "center",
-  },
-  settingBtn: {
-    left: 12,
   },
 });
 export default HomeScreen;
