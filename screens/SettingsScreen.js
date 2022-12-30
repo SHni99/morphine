@@ -24,7 +24,7 @@ const Settings = ({ navigation }) => {
           </TouchableOpacity>
         </View>
 
-        <Text>Settings</Text>
+        <Text>Aloha</Text>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
