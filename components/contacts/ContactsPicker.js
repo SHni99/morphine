@@ -30,6 +30,7 @@ const ContactsPicker = (props) => {
   const reformatContacts = (arr) => {
     var contacts = [];
     for (let i = 0; i < arr.length; i++) {
+      console.log(arr[i].phoneNumbers);
       if (checkIfBothNumsExists(arr[i].phoneNumbers)) {
         contacts.push({
           firstName: arr[i].firstName,
@@ -40,7 +41,6 @@ const ContactsPicker = (props) => {
       } else {
       }
     }
-
     return contacts;
   };
 
@@ -53,16 +53,17 @@ const ContactsPicker = (props) => {
     return "";
   };
 
-  const checkIfBothNumsExists = (contactNumbers) => {
-    for (let i = 0; i < contactNumbers.length; i++) {
-      if (
-        contactNumbers[i].label === "mobile" ||
-        contactNumbers[i].label === "home"
-      ) {
-        return true;
+  const checkIfBothNumsExists = (contact) => {
+    if (contact) {
+      for (let i = 0; i < contact.length; i++) {
+        if (contact[i].label === "mobile" || contact[i].label === "home") {
+          return true;
+        }
       }
+      return false;
+    } else {
+      return false;
     }
-    return false;
   };
 
   const searchFilter = (input) => {
