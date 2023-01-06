@@ -5,13 +5,40 @@ import {
   KeyboardAvoidingView,
   Dimensions,
   TouchableOpacity,
+  Button,
 } from "react-native";
-import React from "react";
+import React, { useState } from "react";
+import { db2 } from "../firebase/firebase";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
-const { height, width } = Dimensions.get("screen");
+import { ref, set } from "firebase/database";
+const { width } = Dimensions.get("screen");
 
 const Settings = ({ navigation }) => {
+  const [on, setOn] = useState("Off");
+
+  const writeButtonStatus = (on) => {
+    set(ref(db2, "Users Data/Token UID:XvIeVwC7M0QN0qW15FNYO2e5BJ93/GPS/Button"), {
+      on: on
+    })
+      .then(() => {
+        console.log("Success!");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
+  const toggleButton = () => {
+    if (on == "On") {
+      setOn("Off");
+      writeButtonStatus(on);
+    } else {
+      setOn("On");
+      writeButtonStatus(on);
+    }
+  };
+
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView style={styles.container}>
@@ -23,8 +50,7 @@ const Settings = ({ navigation }) => {
             <Feather name="menu" size={24} color="black" />
           </TouchableOpacity>
         </View>
-
-        <Text>Aloha</Text>
+        <Button title={on} onPress={toggleButton} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
