@@ -2,11 +2,13 @@
 
 //Import the functions you need from the SDKs you need
 import { initializeApp, getApps, getApp } from "firebase/app";
+import firebase from "firebase/app";
 import { getAuth, sendPasswordResetEmail, initializeAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage";
-import { getReactNativePersistence } from 'firebase/auth/react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getDatabase } from "firebase/database";
+import { getReactNativePersistence } from "firebase/auth/react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -41,6 +43,7 @@ if (getApps().length < 1) {
 //const app = initializeApp(firebaseConfig);
 
 const db = getFirestore(app);
+const db2 = getDatabase(app);
 
 //const authentication = getAuth(app);
 
@@ -49,4 +52,4 @@ const resetPassword = sendPasswordResetEmail;
 const storage = getStorage();
 const storageRef = ref(storage);
 
-export { db, authentication, storageRef, resetPassword };
+export { db, db2, authentication, storageRef, resetPassword, firebase };

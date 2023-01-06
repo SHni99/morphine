@@ -10,26 +10,53 @@ import {
   Keyboard,
 } from "react-native";
 import React, { useState, useEffect } from "react";
-import { StackActions, useNavigation } from "@react-navigation/native";
-import { authentication } from "../firebase/firebase";
+import { useNavigation } from "@react-navigation/native";
+import { authentication, db2, firebase } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Toast from "react-native-root-toast";
+import { ref, set } from "firebase/database";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigation = useNavigation();
 
+  const writeUserData = (email, password) => {
+    //const newKey = push(child(ref(database), `users`)).key;
+    set(ref(db2, "login details/"), {
+      email: email,
+      password: password,
+    })
+      .then(() => {
+        console.log("successfully stored");
+      })
+      .catch((error) => {
+        console.log(error.message);
+      });
+  };
+
+  /* var isOfflineForDatabase = {
+    state: "offline",
+    last_changed: firebase.database.ServerValue.TIMESTAMP,
+  };
+
+  var isOnlineForDatabase = {
+    state: "online",
+    last_changed: firebase.database.ServerValue.TIMESTAMP,
+  };
+*/
+  //var userStatusDatabaseRef = firebase.database().ref('/status/' + uid);
+
   const handleLogin = () => {
     signInWithEmailAndPassword(authentication, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log(`Signed in with ${user.email}`);
-        let toast = Toast.show('Successfully signed in', {
+        let toast = Toast.show("Successfully signed in", {
           duration: Toast.durations.SHORT,
-          backgroundColor: 'green',
+          backgroundColor: "green",
         });
-        
+        writeUserData(email, password);
         setTimeout(function hideToast() {
           Toast.hide(toast);
         }, 1500);

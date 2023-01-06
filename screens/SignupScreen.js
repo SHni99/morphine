@@ -9,12 +9,15 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Alert,
-  Modal,
 } from "react-native";
 import React, { useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  getAuth,
+  sendEmailVerification,
+} from "firebase/auth";
 import { authentication, db } from "../firebase/firebase";
 import {
   collection,
@@ -28,6 +31,7 @@ import {
   deleteDoc,
   setDoc,
 } from "firebase/firestore";
+
 const SignupScreen = () => {
   const navigation = useNavigation();
   const [firstName, setFirstName] = useState("");
@@ -53,33 +57,34 @@ const SignupScreen = () => {
       //user must enter a password with more than 8 chars, at least an uppercase, lowercase, special case and number
       if (password.length < 8) {
         setError("Please enter a password \nmore than 8 characters");
-        reset(); 
+        reset();
         return false;
       } else if (!/^(?=.*[0-9])/.test(password)) {
         setError("Please enter a password \ncontaining at least one NUMBER");
-        reset(); 
+        reset();
         return false;
       } else if (!/^(?=.*[A-Z])/.test(password)) {
         setError(
           "Please enter a password containing \nat least one UPPERCASE character"
-        ); 
+        );
         reset();
         return false;
       } else if (!/^(?=.*[a-z])/.test(password)) {
         setError(
           "Please enter a password containing \nat least one LOWERCASE character"
-        ); 
+        );
         reset();
         return false;
       } else if (!/^(?=.*[!@#$%^&*])/.test(password)) {
         setError(
           "Please enter a password containing \nat least one SPECIAL CASE"
-        ); 
-        reset(); 
+        );
+        reset();
         return false;
       } else if (password !== repassword) {
         setError("Please enter the SAME passwords!");
-        reset(); return false;
+        reset();
+        return false;
       }
     } else {
       setError("Password field is empty!");
@@ -99,22 +104,27 @@ const SignupScreen = () => {
   };
 
   const handleSignup = () => {
-    if (checkValid()) {
-      if (validatePassword()) {
-        createUserWithEmailAndPassword(authentication, email, password)
-          .then(async (userCredentials) => {
-            const user = userCredentials.user;
-            await setDoc(doc(db, "users", user.uid), {
-              email: email,
-              fName: firstName,
-              lName: lastName,
-              phoneNum: phoneNum,
-            }).catch((error) => {
-              console.log(error);
-            });
-          })
-          .catch((error) => alert(error.message));
-      }
+    //const auth = getAuth();
+    if (checkValid() && validatePassword()) {
+      /*sendEmailVerification(auth.currentUser).then(() => {
+          Alert.alert("Email verification sent!");
+        });*/
+
+      createUserWithEmailAndPassword(authentication, email, password)
+        .then(async (userCredentials) => {
+          const user = userCredentials.user;
+          await setDoc(doc(db, "users", user.uid), {
+            email: email,
+            fName: firstName,
+            lName: lastName,
+            phoneNum: phoneNum,
+          }).catch((error) => {
+            console.log(error);
+          });
+          //writeUserData();
+          navigation.navigate("login");
+        })
+        .catch((error) => alert(error.message));
     } else {
       Alert.alert("Error", "Please enter valid information");
     }
@@ -194,12 +204,11 @@ const SignupScreen = () => {
               autoCapitalize="none"
               autoCorrect={false}
             />
-          </View> 
+          </View>
           {error1 && <Text style={styles.error}>{error1}</Text>}
           <TouchableOpacity style={styles.signupbutton} onPress={handleSignup}>
             <Text style={styles.signuptext}>SIGN UP</Text>
           </TouchableOpacity>
-          
         </View>
       </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
@@ -227,7 +236,7 @@ const styles = StyleSheet.create({
   error: {
     textAlignVertical: "center",
     textAlign: "center",
-    color: 'red'
+    color: "red",
   },
   signupbutton: {
     width: 100,
