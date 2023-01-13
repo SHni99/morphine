@@ -4,6 +4,9 @@ import SignupScreen from "./SignupScreen";
 import ContactsScreen from "./ContactsScreen";
 import GpsScreen from "./GpsScreen";
 import SettingsScreen from "./SettingsScreen";
+import ChangeNameScreen from "./ChangeNameScreen";
+import ChangePasswordScreen from "./ChangePasswordScreen";
+import ChangeNumberScreen from "./ChangeNumberScreen";
 export {
   HomeScreen,
   LoginScreen,
@@ -11,4 +14,7 @@ export {
   ContactsScreen,
   GpsScreen,
   SettingsScreen,
+  ChangeNameScreen,
+  ChangePasswordScreen,
+  ChangeNumberScreen,
 };

@@ -24,6 +24,21 @@ const AppNavigator = () => {
         component={DrawerNavigator}
         options={{ headerShown: false }}
       />
+      <Stack.Screen
+        name="changename"
+        component={Screens.ChangeNameScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="changenum"
+        component={Screens.ChangeNumberScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="changepw"
+        component={Screens.ChangePasswordScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 };

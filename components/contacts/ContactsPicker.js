@@ -30,7 +30,6 @@ const ContactsPicker = (props) => {
   const reformatContacts = (arr) => {
     var contacts = [];
     for (let i = 0; i < arr.length; i++) {
-      console.log(arr[i].phoneNumbers);
       if (checkIfBothNumsExists(arr[i].phoneNumbers)) {
         contacts.push({
           firstName: arr[i].firstName,
