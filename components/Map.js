@@ -1,19 +1,28 @@
 import React, { useContext } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import MapView, { Circle } from "react-native-maps";
+import MapView, { Circle, MapMarker } from "react-native-maps";
 import { Context as LocationContext } from "./LocationContext";
 
 const Map = () => {
   const {
-    state: { currentLocation },
+    state: { currentLocation},
   } = useContext(LocationContext);
   if (!currentLocation) {
     return <ActivityIndicator size="large" style={{ marginTop: 200 }} />;
   }
 
   initialLocation = {
-    longitude: 103.7727,
-    latitude: 1.2907
+    longitude: 103.77556,
+    latitude: 1.29946,
+    latitudeDelta: 0.005,
+    longitudeDelta: 0.005,
+  };
+
+  const mockLocation = {
+    longitude: 103.77556,
+    latitude: 1.29946,
+    latitudeDelta: 0.001,
+    longitudeDelta: 0.001,
   };
 
   return (
@@ -22,15 +31,16 @@ const Map = () => {
         style={styles.map}
         initialRegion={{
           ...initialLocation,
-          latitudeDelta: 0.01,
-          longitudeDelta: 0.01,
         }}
       >
         <Circle
-          center={currentLocation.coords}
+        //set to currentLocation.cords for real-time reading
+          center={{ latitude: mockLocation.latitude, longitude: mockLocation.longitude}}
           radius={20}
-          strokeColor="rgba(158, 158, 255, 1.0)"
-          fillColor="#FF0000"
+          strokeColor="black"
+          fillColor="#fed42855"
+        />
+        <MapMarker coordinate={{ latitude: mockLocation.latitude, longitude: mockLocation.longitude}}
         />
       </MapView>
     </View>
@@ -47,6 +57,7 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
+    position: "absolute"
   },
 });
 

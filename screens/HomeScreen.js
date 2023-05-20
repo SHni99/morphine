@@ -7,26 +7,34 @@ import {
   Dimensions,
 } from "react-native";
 import React, { useEffect, useState } from "react";
-import { useNavigation } from "@react-navigation/native";
+//import { useNavigation } from "@react-navigation/native";
 import { getAuth } from "firebase/auth";
 import { doc, onSnapshot } from "firebase/firestore";
-import { db } from "../firebase/firebase";
+import { db, db2, fallRef} from "../firebase/firebase";
 import { SafeAreaView } from "react-native-safe-area-context";
 const { height, width } = Dimensions.get("screen");
-import { Ionicons } from "@expo/vector-icons";
-import { DrawerActions } from "@react-navigation/native";
 import { Feather } from "@expo/vector-icons";
+import { ref, onValue } from "firebase/database";
+import PieChart from 'react-native-pie-chart'
 
 const HomeScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
+  const [fallMsg, setFallMsg] = useState("");
 
   // get current user's info
   useEffect(() => {
+    const fallRef = ref(db2, 'Users Data/Token UID:XvIeVwC7M0QN0qW15FNYO2e5BJ93/Split Circuit/MPU6050/MPU6050 Fall');
     const usersDocRef = doc(db, "users", getAuth().currentUser.uid);
     onSnapshot(usersDocRef, (doc) => {
       setUser(doc.data());
     });
+
+    onValue(fallRef, (snapshot) => {
+      setFallMsg(snapshot.val());
+    });
+
   }, []);
+
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
@@ -44,20 +52,10 @@ const HomeScreen = ({ navigation }) => {
             </TouchableOpacity>
           </View>
 
-          {/* delete when done */}
           <View style={{ alignItems: "center", top: 200 }}>
-            <TouchableOpacity
-              style={{
-                // justifyContent: "center",
-                // alignContent: "center",
-                alignSelf: "center",
-              }}
-              onPress={() => {
-                navigation.navigate("login");
-              }}
-            >
-              <Text>Go back</Text>
-            </TouchableOpacity>
+            
+            <Text style={{fontWeight: 'bold'}}>Fall status: {fallMsg}</Text>
+            
             {/* <TouchableOpacity
           onPress={() => {
             getAuth().currentUser.delete();
@@ -65,10 +63,16 @@ const HomeScreen = ({ navigation }) => {
         >
           <Text>Delete acc</Text>
         </TouchableOpacity> */}
-            <View style={styles.mainContainer}>
-              <Text>Battery Percentage of device here</Text>
-              <Text>Maybe recent contacts here as well</Text>
-            </View>
+          <View style={styles.mainContainer}>
+            <PieChart
+            widthAndHeight={250}
+            series={[123, 321, 123, 789, 537]}
+            sliceColor={['#5BC236', '#5BC236', '#5BC236', '#5BC236', '#5BC236']}
+            coverRadius={0.65}
+            coverFill={'#FFFFFF'}
+          />
+            <Text style={styles.battery}>FallSense &#128267;</Text>
+          </View>
           </View>
         </View>
       </KeyboardAvoidingView>
@@ -98,9 +102,15 @@ const styles = StyleSheet.create({
     // left: 130,
   },
   mainContainer: {
-    // flex: 1,
+    //flex: 3,
     justifyContent: "center",
     alignItems: "center",
+    top: 12,
   },
+  battery: {
+    fontSize: 20,
+    position: "absolute",
+    fontWeight: "bold"
+  }
 });
 export default HomeScreen;

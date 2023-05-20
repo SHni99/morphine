@@ -52,4 +52,5 @@ const resetPassword = sendPasswordResetEmail;
 const storage = getStorage();
 const storageRef = ref(storage);
 
-export { db, db2, authentication, storageRef, resetPassword, firebase };
+
+export { db, db2, authentication, storageRef, resetPassword, firebase};
