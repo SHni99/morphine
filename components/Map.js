@@ -35,12 +35,12 @@ const Map = () => {
       >
         <Circle
         //set to currentLocation.cords for real-time reading
-          center={{ latitude: mockLocation.latitude, longitude: mockLocation.longitude}}
+          center={currentLocation.cords}
           radius={20}
           strokeColor="black"
           fillColor="#fed42855"
         />
-        <MapMarker coordinate={{ latitude: mockLocation.latitude, longitude: mockLocation.longitude}}
+        <MapMarker coordinate={currentLocation.cords}
         />
       </MapView>
     </View>

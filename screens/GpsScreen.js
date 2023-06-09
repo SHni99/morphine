@@ -34,7 +34,6 @@ const GpsScreen = () => {
       setError(error);
     }
   };
-  console.log(err);
   useEffect(() => {
     startWatching();
   }, []);

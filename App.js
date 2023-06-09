@@ -4,7 +4,7 @@ import AppNavigator from "./navigation/AppNavigator";
 import { RootSiblingParent } from "react-native-root-siblings";
 import { Provider as LocationProvider } from "./components/LocationContext";
 import { useState, useEffect, useRef } from 'react';
-import { Text, View, Platform, StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 
@@ -68,7 +68,7 @@ async function registerForPushNotificationsAsync() {
   return token;
 }
 
-export default function App() {
+export default function App(){
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
