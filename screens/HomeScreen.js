@@ -73,12 +73,14 @@ const HomeScreen = ({ navigation }) => {
       "Users Data/Token UID:XvIeVwC7M0QN0qW15FNYO2e5BJ93/Split Circuit/MPU6050/MPU6050 Fall"
     );
     onValue(fallRef, (snapshot) => {
-      setFallMsg(snapshot.val());
-      if (snapshot.val() === "Fall Detected") {
+      setFallMsg(snapshot.val()[0]);
+      if (snapshot.val()[0] === "Fall Detected") {
         setIsFall(true);
         setLastFallDate(
           new Date().toLocaleString("en-GB", { timeZone: "SST" })
         );
+      } else {
+        setIsFall(false);
       }
     });
 
@@ -108,6 +110,19 @@ const HomeScreen = ({ navigation }) => {
     );
   }
   const current = forecast.weather[0];
+  const getWelcomeText = () => {
+    if (isFall && isPanic) {
+      return "Panic button has been activated.\nA fall has been detected.";
+    }
+    if (isFall) {
+      return "A fall has been detected.";
+    }
+
+    if (isPanic) {
+      return "Panic button has been activated.";
+    }
+    return "Welcome back,\n" + user.fName;
+  };
 
   return (
     <ImageBackground
@@ -115,7 +130,13 @@ const HomeScreen = ({ navigation }) => {
       resizeMode="cover"
       style={{ width: "100%", height: "100%" }}
     >
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView
+        style={
+          isPanic || isFall
+            ? { backgroundColor: "#ffa45c", flex: 1 }
+            : { flex: 1 }
+        }
+      >
         <KeyboardAvoidingView style={styles.container}>
           <View style={styles.welcomecontainer}>
             <View style={styles.welcomecontainerContent}>
@@ -126,15 +147,17 @@ const HomeScreen = ({ navigation }) => {
                   marginTop: 20,
                 }}
               >
-                <Text style={styles.welcometext}>Welcome back</Text>
-                <Text style={styles.welcometext}>{user ? user.fName : ""}</Text>
+                <Text style={[styles.welcometext]}>{getWelcomeText()}</Text>
                 <Text style={styles.batteryPercent}>Device Status: ON </Text>
                 <Text style={styles.batteryPercent}>
                   Device battery percentage: 50%
                 </Text>
-                <View style={styles.batteryContainer}>
-                  <BatteryArc />
-                </View>
+                {!isFall ||
+                  (!isPanic && (
+                    <View style={styles.batteryContainer}>
+                      <BatteryArc />
+                    </View>
+                  ))}
               </View>
 
               <TouchableOpacity
