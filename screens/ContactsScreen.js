@@ -5,6 +5,7 @@ import {
   Modal,
   Dimensions,
   TouchableOpacity,
+  ImageBackground,
 } from "react-native";
 import React, { useState } from "react";
 import MapView from "react-native-maps";
@@ -25,6 +26,7 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import EmergencyContactItem from "../components/contacts/EmergencyContactItem";
 const { height, width } = Dimensions.get("screen");
 import { AntDesign } from "@expo/vector-icons";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ContactsScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -50,41 +52,46 @@ const ContactsScreen = () => {
     getEmergencyContacts();
   }, [!isModalVisible]);
   return (
-    <View
-      style={{
-        flex: 1,
-        alignContent: "center",
-      }}
+    <ImageBackground
+      source={require("../assets/Header2.png")}
+      resizeMode="cover"
+      style={{ width: "100%", height: "100%" }}
     >
-      <View style={styles.header}>
-        <Text style={{ fontWeight: "500", fontSize: 25, letterSpacing: -1 }}>
-          Emergency Contacts
-        </Text>
-        <TouchableOpacity
-          onPress={() => toggleModal(true)}
-          style={styles.addContact}
-        >
-          <AntDesign name="adduser" size={24} color="grey" />
-        </TouchableOpacity>
-      </View>
-
-      <View
+      <SafeAreaView
         style={{
           flex: 1,
-          marginTop: 80,
-          marginBottom: 50,
         }}
       >
-        <FlatList
-          data={emergencyContacts}
-          keyExtractor={(item) => item.index}
-          renderItem={({ item, index }) => {
-            return (
-              <EmergencyContactItem item={item} index={index} key={index} />
-            );
+        <View style={styles.header}>
+          <Text style={{ fontSize: 35, fontWeight: "700", color: "white" }}>
+            Emergency Contact
+          </Text>
+          <TouchableOpacity
+            onPress={() => toggleModal(true)}
+            style={styles.addContact}
+          >
+            <AntDesign name="adduser" size={24} color="grey" />
+          </TouchableOpacity>
+        </View>
+
+        <View
+          style={{
+            backgroundColor: "white",
+            paddingTop: 20,
+            height: "100%",
           }}
-        />
-      </View>
+        >
+          <FlatList
+            data={emergencyContacts}
+            keyExtractor={(item) => item.index}
+            renderItem={({ item, index }) => {
+              return (
+                <EmergencyContactItem item={item} index={index} key={index} />
+              );
+            }}
+          />
+        </View>
+      </SafeAreaView>
       <Modal
         visible={isModalVisible}
         animationType="slide"
@@ -96,19 +103,18 @@ const ContactsScreen = () => {
           emergencyContacts={emergencyContacts}
         />
       </Modal>
-    </View>
+    </ImageBackground>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    top: 60,
-    // left: 40,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
     marginLeft: 20,
     marginRight: 20,
+    height: "8%",
   },
   addContact: {
     // left: 80,

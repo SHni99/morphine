@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   Alert,
+  KeyboardAvoidingView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 const { height, width } = Dimensions.get("screen");
@@ -16,6 +17,7 @@ import { issuedAtTime } from "@firebase/util";
 import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/firebase";
 import { getAuth } from "firebase/auth";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const ContactsPicker = (props) => {
   const [allContacts, setAllContacts] = useState([]);
@@ -185,70 +187,92 @@ const ContactsPicker = (props) => {
   }, []);
 
   return (
-    <View style={{ flex: 1, alignContent: "center" }}>
-      <View style={styles.header}>
-        <Text style={{ fontWeight: "500", fontSize: 20, letterSpacing: -1 }}>
-          Select Contact
-        </Text>
-        <TouchableOpacity style={styles.closeBtn} onPress={() => closeModal()}>
-          <Text>Close</Text>
-        </TouchableOpacity>
-      </View>
-      <TextInput
-        style={styles.searchBar}
-        placeholder="Search contact.."
-        onChangeText={(txt) => searchFilter(txt)}
-        value={input}
-      />
-      <View
-        style={{
-          flex: 1,
-          marginTop: 80,
-          marginBottom: 50,
-        }}
-      >
-        <FlatList
-          data={filteredData}
-          keyExtractor={(item) => item.index}
-          renderItem={({ item, index }) => {
-            return (
-              <ContactItem
-                item={item}
-                index={index}
-                key={index}
-                selected={selected}
-              />
-            );
+    <SafeAreaView style={{ flex: 1 }}>
+      <KeyboardAvoidingView style={{ flex: 1 }}>
+        <View
+          style={{
+            width: "100%",
+            height: "20%",
+            backgroundColor: "#43356B",
+            borderBottomRightRadius: 25,
+            borderBottomLeftRadius: 25,
           }}
-        />
-      </View>
-      <TouchableOpacity style={styles.confirmBtn} onPress={() => confirm()}>
-        <Text style={{ color: "white", fontWeight: "bold" }}>Confirm</Text>
-      </TouchableOpacity>
-    </View>
+        >
+          <View
+            style={{
+              padding: 20,
+              display: "flex",
+              flex: 1,
+              justifyContent: "space-between",
+            }}
+          >
+            <View style={styles.header}>
+              <Text style={{ fontWeight: "600", fontSize: 30, color: "white" }}>
+                Select Contact
+              </Text>
+              <TouchableOpacity
+                style={styles.closeBtn}
+                onPress={() => closeModal()}
+              >
+                <Text style={{ color: "grey" }}>Close</Text>
+              </TouchableOpacity>
+            </View>
+            <TextInput
+              style={styles.searchBar}
+              placeholder="Search contact.."
+              onChangeText={(txt) => searchFilter(txt)}
+              value={input}
+            />
+          </View>
+        </View>
+
+        <View
+          style={{
+            flex: 1,
+            marginTop: 20,
+            marginBottom: 50,
+          }}
+        >
+          <FlatList
+            data={filteredData}
+            keyExtractor={(item) => item.index}
+            renderItem={({ item, index }) => {
+              return (
+                <ContactItem
+                  item={item}
+                  index={index}
+                  key={index}
+                  selected={selected}
+                />
+              );
+            }}
+          />
+        </View>
+        <TouchableOpacity style={styles.confirmBtn} onPress={() => confirm()}>
+          <Text style={{ color: "white", fontWeight: "bold" }}>Confirm</Text>
+        </TouchableOpacity>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
-    top: 60,
-    // left: 40,
+    marginTop: 40,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    marginLeft: 20,
-    marginRight: 20,
   },
   searchBar: {
-    top: 70,
     width: width - 30,
     alignSelf: "center",
-    height: 35,
-    borderRadius: 15,
+    height: 45,
+    borderRadius: 20,
     borderColor: "grey",
     borderWidth: 0.8,
-    paddingLeft: 10,
-    paddingRight: 10,
+    backgroundColor: "white",
+    paddingLeft: 15,
+    paddingRight: 15,
   },
   confirmBtn: {
     alignSelf: "center",

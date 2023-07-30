@@ -42,17 +42,19 @@ const EmergencyContactItem = ({ item, index }) => {
   };
   return (
     <View
-      key={item.index}
+      key={item.index + mobile}
       style={{
         flexDirection: "row",
         marginBottom: 20,
         padding: 20,
         alignItems: "center",
-        backgroundColor: "white",
+        backgroundColor: "#f7efe9",
         flexDirection: "row",
         justifyContent: "space-between",
         marginLeft: 10,
         marginRight: 10,
+        borderRadius: 25,
+        height: 60,
       }}
     >
       <Text>
