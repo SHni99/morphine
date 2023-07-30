@@ -52,14 +52,15 @@ const ContactsScreen = () => {
     getEmergencyContacts();
   }, [!isModalVisible]);
   return (
-    <ImageBackground
-      source={require("../assets/Header2.png")}
-      resizeMode="cover"
-      style={{ width: "100%", height: "100%" }}
+    <View
+      style={{
+        flex: 1,
+      }}
     >
       <SafeAreaView
         style={{
           flex: 1,
+          backgroundColor: "#ffa45c",
         }}
       >
         <View style={styles.header}>
@@ -103,14 +104,14 @@ const ContactsScreen = () => {
           emergencyContacts={emergencyContacts}
         />
       </Modal>
-    </ImageBackground>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   header: {
     flexDirection: "row",
-    alignItems: "center",
+    // alignItems: "center",
     justifyContent: "space-between",
     marginLeft: 20,
     marginRight: 20,
@@ -118,6 +119,7 @@ const styles = StyleSheet.create({
   },
   addContact: {
     // left: 80,
+    marginTop: 10,
   },
 });
 export default ContactsScreen;

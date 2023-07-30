@@ -18,7 +18,6 @@ import { Feather } from "@expo/vector-icons";
 import { ref, onValue, getDatabase } from "firebase/database";
 import PieChart from "react-native-pie-chart";
 import * as Location from "expo-location";
-import BatteryArc from "../components/battery/BatteryArc";
 
 const API_KEY = "f8274b0198410d536d41cc16ae3f05be";
 let weatherUrl = `http://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&q=Singapore&units=metric`;
@@ -33,6 +32,8 @@ const HomeScreen = ({ navigation }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [isPanic, setIsPanic] = useState(false);
   const [lastPanicDate, setLastPanicDate] = useState();
+  const [MPUMsg, setMPUMsg] = useState("off");
+  const [MPUval, setMPUval] = useState("");
 
   const loadingForecast = async () => {
     setRefreshing(true);
@@ -92,12 +93,34 @@ const HomeScreen = ({ navigation }) => {
     );
     onValue(isActivatedRef, (snapshot) => {
       const data = snapshot.val();
-      console.log(data[0]);
       setIsPanic(data[0] === "True");
       if (data[0] === "True") {
         setLastPanicDate(
           new Date().toLocaleString("en-GB", { timeZone: "SST" })
         );
+      }
+    });
+
+    // check if mpu is turned on
+    const MPUref = ref(
+      db2,
+      "Users Data/Token UID:XvIeVwC7M0QN0qW15FNYO2e5BJ93/Split Circuit/MPU6050/MPU6050 Accounter"
+    );
+
+    onValue(MPUref, (snapshot) => {
+      setMPUval(snapshot.val());
+      if (MPUval == snapshot.val()) {
+        const timer = setTimeout(() => setMPUMsg("off"), 5000);
+        return () => {
+          if (MPUval == snapshot.val) {
+            Alert.alert("Device has shut down");
+            clearTimeout(timer);
+          }
+        };
+      } else {
+        if (MPUMsg != "on") {
+          setMPUMsg("on");
+        }
       }
     });
   }, []);
@@ -145,19 +168,23 @@ const HomeScreen = ({ navigation }) => {
                   display: "flex",
                   flexDirection: "column",
                   marginTop: 20,
+                  justifyContent: "center",
+                  flex: 1,
                 }}
               >
+                <Image
+                  source={
+                    !isPanic && !isFall
+                      ? require("../assets/logo-white.png")
+                      : require("../assets/logo.png")
+                  }
+                  style={!isPanic && !isFall ? styles.whiteLogo : styles.logo}
+                />
                 <Text style={[styles.welcometext]}>{getWelcomeText()}</Text>
-                <Text style={styles.batteryPercent}>Device Status: ON </Text>
                 <Text style={styles.batteryPercent}>
-                  Device battery percentage: 50%
+                  Device Status: {MPUMsg.toLocaleUpperCase()}{" "}
+                  {MPUMsg === "on" ? "\u{1F7E2}" : "\u{1F534}"}
                 </Text>
-                {!isFall ||
-                  (!isPanic && (
-                    <View style={styles.batteryContainer}>
-                      <BatteryArc />
-                    </View>
-                  ))}
               </View>
 
               <TouchableOpacity
@@ -235,8 +262,8 @@ const HomeScreen = ({ navigation }) => {
                   {isPanic ? "ACTIVATED" : "NOT ACTIVATED"}
                 </Text>
                 <Text style={{ textAlign: "center", fontStyle: "italic" }}>
-                  Last activated:{" "}
-                  {lastPanicDate ? lastPanicDate : "No last date recorded"}{" "}
+                  Last activated:{"\n"}
+                  {lastPanicDate ? lastPanicDate : "No last date recorded"}
                 </Text>
               </View>
               <View style={[styles.emergencyContainer, { marginLeft: 10 }]}>
@@ -258,70 +285,12 @@ const HomeScreen = ({ navigation }) => {
                   {isFall ? "USER HAS FALLEN" : "NO FALL"}
                 </Text>
                 <Text style={{ textAlign: "center", fontStyle: "italic" }}>
-                  Last fall:{" "}
+                  Last fall:{"\n"}
                   {lastFallDate ? lastFallDate : "No last date recorded"}
                 </Text>
               </View>
             </View>
           </View>
-
-          {/* <View style={styles.weatherContainer}>
-            <View style={styles.weatherTextContainer}>
-              <View style={styles.mainWeather}>
-                <Text
-                  style={{
-                    fontSize: "45",
-                    fontWeight: "bold",
-                    letterSpacing: -2,
-                    color: "#43356B",
-                  }}
-                >
-                  {Math.round(forecast.main.temp)}˚C
-                </Text>
-              </View>
-              <View style={styles.miscWeatherText}>
-                <Text
-                  style={{
-                    fontSize: "20",
-                    fontWeight: "bold",
-                  }}
-                >
-                  {current.main}
-                </Text>
-                <Text>Feels like {Math.round(forecast.main.feels_like)}˚C</Text>
-              </View>
-            </View>
-            <View style={styles.weatherIcon}>
-              <Image
-                style={styles.largeIcon}
-                source={{
-                  uri: `http://openweathermap.org/img/wn/${current.icon}@4x.png`,
-                }}
-              />
-            </View>
-          </View> */}
-
-          {/* <View style={styles.batteryContainer}>
-            <Text style={{ fontWeight: "bold", fontSize: "30" }}>
-              FallGuard &#128267;
-            </Text>
-            <View style={styles.mainContainer}>
-              <PieChart
-                widthAndHeight={250}
-                series={[123, 321, 123, 789, 537]}
-                sliceColor={[
-                  "#5BC236",
-                  "#5BC236",
-                  "#5BC236",
-                  "#5BC236",
-                  "#5BC236",
-                ]}
-                coverRadius={0.65}
-                coverFill={"#FFFFFF"}
-              />
-              <Text style={styles.battery}>100%</Text>
-            </View>
-          </View> */}
         </KeyboardAvoidingView>
       </SafeAreaView>
     </ImageBackground>
@@ -331,7 +300,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-
+  logo: {
+    width: 60,
+    height: 60,
+    alignSelf: "center",
+  },
+  whiteLogo: {
+    width: 60,
+    height: 60,
+    alignSelf: "center",
+    backgroundColor: "white",
+    borderRadius: "100%",
+  },
   weatherTextContainer: {
     // backgroundColor: "black",
     display: "flex",
@@ -353,16 +333,6 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     backgroundColor: "#f2f2fc",
   },
-  emergencyContainer: {
-    // borderRadius: 25,
-    // display: "flex",
-    // marginTop: 20,
-    // marginLeft: 20,
-    // marginRight: 20,
-    // padding: 20,
-    // flex: 1,
-    // marginBottom: 20,
-  },
 
   mainWeather: {
     marginRight: 10,
@@ -374,14 +344,14 @@ const styles = StyleSheet.create({
   },
   welcomecontainer: {
     width: "100%",
-    height: "40%",
   },
   welcomecontainerContent: {
     flexDirection: "column",
     padding: 20,
     display: "flex",
-    flex: 1,
     alignItems: "center",
+    marginBottom: 40,
+    minHeight: "35%",
   },
 
   largeIcon: {
@@ -390,6 +360,12 @@ const styles = StyleSheet.create({
     left: 10,
     backgroundColor: "#A3A3BD",
     borderRadius: "100%",
+  },
+  appName: {
+    fontSize: 20,
+    color: "white",
+    fontWeight: "500",
+    textAlign: "center",
   },
   welcometext: {
     fontSize: 35,
@@ -410,11 +386,7 @@ const styles = StyleSheet.create({
     right: 20,
   },
   drawertxt: {},
-  mainContainer: {
-    justifyContent: "center",
-    alignItems: "center",
-    top: 12,
-  },
+
   battery: {
     fontSize: 20,
     position: "absolute",
@@ -429,6 +401,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderTopRightRadius: 25,
     borderTopLeftRadius: 25,
+    // height: "70%",
   },
   panicBtnContainer: {
     marginTop: 20,

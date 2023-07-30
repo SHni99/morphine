@@ -13,7 +13,6 @@ import { db, db2 } from "../firebase/firebase";
 import { Feather } from "@expo/vector-icons";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ref, set } from "firebase/database";
-import { TextInput } from "react-native-gesture-handler";
 import { doc, onSnapshot, setDoc } from "firebase/firestore";
 import { getAuth } from "firebase/auth";
 import { AntDesign } from "@expo/vector-icons";
@@ -28,31 +27,6 @@ const Settings = ({ navigation }) => {
   const [phoneNum, setPhoneNum] = useState("");
 
   const [on, setOn] = useState("Off");
-
-  const writeButtonStatus = (on) => {
-    set(
-      ref(db2, "Users Data/Token UID:XvIeVwC7M0QN0qW15FNYO2e5BJ93/GPS/Button"),
-      {
-        on: on,
-      }
-    )
-      .then(() => {
-        console.log("Success!");
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
-
-  const toggleButton = () => {
-    if (on == "On") {
-      setOn("Off");
-      writeButtonStatus(on);
-    } else {
-      setOn("On");
-      writeButtonStatus(on);
-    }
-  };
 
   const cfmNameChange = (newName) => {
     const sendDB = () => {
@@ -145,8 +119,6 @@ const Settings = ({ navigation }) => {
             </TouchableOpacity>
           </View>
         </View>
-
-        <Button title={on} onPress={toggleButton} />
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -163,21 +135,19 @@ const styles = StyleSheet.create({
   inputs: {
     justifyContent: "center",
     alignSelf: "center",
-    paddingTop: 30,
   },
   welcomecontainer: {
-    top: 12,
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
     marginLeft: 20,
     marginRight: 20,
+    height: "8%",
   },
   header: {},
   headerText: {
-    fontSize: 25,
-    letterSpacing: -1,
-    fontWeight: "500",
+    fontSize: 35,
+    fontWeight: "700",
+    color: "#43356B",
   },
   inputContainer: {
     backgroundColor: "#A3A3BD",

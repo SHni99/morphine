@@ -8,6 +8,7 @@ import {
   Alert,
   TouchableWithoutFeedback,
   Keyboard,
+  Image,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
@@ -78,7 +79,8 @@ const LoginScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <View>
+        <View style={{ display: "flex", alignItems: "center" }}>
+          <Image source={require("../assets/FG.png")} style={styles.logo} />
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.inputText}
@@ -125,6 +127,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 
+  logo: {
+    width: 160,
+    height: 80,
+    marginBottom: 40,
+  },
   inputContainer: {
     backgroundColor: "#A3A3BD",
     borderRadius: 15,
