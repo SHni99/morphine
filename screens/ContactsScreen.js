@@ -1,32 +1,21 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  Modal,
-  Dimensions,
-  TouchableOpacity,
-  ImageBackground,
-} from "react-native";
-import React, { useState } from "react";
-import MapView from "react-native-maps";
-import Map from "../components/Map";
-import { useEffect } from "react";
-import { FlatList } from "react-native-gesture-handler";
-import ContactsPicker from "../components/contacts/ContactsPicker";
-import {
-  collection,
-  getDoc,
-  getDocs,
-  onSnapshot,
-  query,
-} from "firebase/firestore";
-import { db } from "../firebase/firebase";
-import { getAuth } from "firebase/auth";
-import { SwipeListView } from "react-native-swipe-list-view";
-import EmergencyContactItem from "../components/contacts/EmergencyContactItem";
-const { height, width } = Dimensions.get("screen");
 import { AntDesign } from "@expo/vector-icons";
+import { getAuth } from "firebase/auth";
+import { collection, onSnapshot, query } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import {
+  Dimensions,
+  Modal,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { FlatList } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
+import ContactsPicker from "../components/contacts/ContactsPicker";
+import EmergencyContactItem from "../components/contacts/EmergencyContactItem";
+import { db } from "../firebase/firebase";
+const { height, width } = Dimensions.get("screen");
 
 const ContactsScreen = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -80,17 +69,24 @@ const ContactsScreen = () => {
             backgroundColor: "white",
             paddingTop: 20,
             height: "100%",
+            // alignItems: "center",
           }}
         >
-          <FlatList
-            data={emergencyContacts}
-            keyExtractor={(item) => item.index}
-            renderItem={({ item, index }) => {
-              return (
-                <EmergencyContactItem item={item} index={index} key={index} />
-              );
-            }}
-          />
+          {emergencyContacts.length > 0 ? (
+            <FlatList
+              data={emergencyContacts}
+              keyExtractor={(item) => item.index}
+              renderItem={({ item, index }) => {
+                return (
+                  <EmergencyContactItem item={item} index={index} key={index} />
+                );
+              }}
+            />
+          ) : (
+            <Text style={{ fontSize: 16, color: "grey", textAlign: "center" }}>
+              You have not added any emergency contacts
+            </Text>
+          )}
         </View>
       </SafeAreaView>
       <Modal

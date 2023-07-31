@@ -7,6 +7,7 @@ import SettingsScreen from "./SettingsScreen";
 import ChangeNameScreen from "./ChangeNameScreen";
 import ChangePasswordScreen from "./ChangePasswordScreen";
 import ChangeNumberScreen from "./ChangeNumberScreen";
+import ChangeDetailsScreen from "./ChangeDetailsScreen";
 export {
   HomeScreen,
   LoginScreen,
@@ -17,4 +18,5 @@ export {
   ChangeNameScreen,
   ChangePasswordScreen,
   ChangeNumberScreen,
+  ChangeDetailsScreen,
 };

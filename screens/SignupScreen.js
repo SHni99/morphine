@@ -1,36 +1,20 @@
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
-  TouchableOpacity,
+  Alert,
+  Keyboard,
   KeyboardAvoidingView,
   StyleSheet,
+  Text,
   TextInput,
-  ScrollView,
+  TouchableOpacity,
   TouchableWithoutFeedback,
-  Keyboard,
-  Alert,
+  View,
 } from "react-native";
-import React, { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
-import { Ionicons } from "@expo/vector-icons";
-import {
-  createUserWithEmailAndPassword,
-  getAuth,
-  sendEmailVerification,
-} from "firebase/auth";
 import { authentication, db } from "../firebase/firebase";
-import {
-  collection,
-  getDocs,
-  orderBy,
-  doc,
-  query,
-  updateDoc,
-  addDoc,
-  serverTimestamp,
-  deleteDoc,
-  setDoc,
-} from "firebase/firestore";
 
 const SignupScreen = () => {
   const navigation = useNavigation();

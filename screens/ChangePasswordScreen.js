@@ -1,122 +1,117 @@
+import { AntDesign } from "@expo/vector-icons";
+import { getAuth, updatePassword } from "firebase/auth";
+import React, { useState } from "react";
 import {
-  View,
-  Text,
-  KeyboardAvoidingViewBase,
-  KeyboardAvoidingView,
-  StyleSheet,
-  TouchableOpacity,
   Alert,
   Dimensions,
   Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TextInput } from "react-native-gesture-handler";
-import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "../firebase/firebase";
-import { getAuth } from "firebase/auth";
+import PasswordInput from "../components/input/PasswordInput";
 const { width, height } = Dimensions.get("screen");
-import { AntDesign } from "@expo/vector-icons";
 
 const ChangePasswordScreen = ({ navigation }) => {
-  const [pw, setPw] = useState("");
-  const [currPw, setCurrPw] = useState("");
-  const [newPw, setNewPw] = useState("");
-  const [newNewPw, setNewNewPw] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [repassword, setRepassword] = useState("");
+  const [error, setError] = useState({ password: "", repassword: "" });
+  const [isValid, setIsValid] = useState(false);
 
-  const cfmNameChange = () => {
-    // const sendDB = () => {
-    //   updateDoc(
-    //     doc(db, "users", getAuth().currentUser.uid),
-    //     {
-    //       fName: newFirstName,
-    //       lName: newLastName,
-    //     },
-    //     Alert.alert("Success!", "You have successfully changed your name."),
-    //     Keyboard.dismiss(),
-    //     navigation.goBack()
-    //   ).catch((e) => console.log(e));
-    // };
-    // Alert.alert("Confirm", "Are you sure you want to change your name?", [
-    //   { text: "No" },
-    //   { text: "Yes", onPress: () => sendDB() },
-    // ]);
+  function getErrors() {
+    const temp = { password: "", repassword: "" };
+    if (newPassword.length < 8) {
+      temp.password = "Password must be at least 8 characters";
+    } else if (!/^(?=.*[0-9])/.test(newPassword)) {
+      temp.password = "Please enter a password containing at least one NUMBER";
+    } else if (!/^(?=.*[A-Z])/.test(newPassword)) {
+      temp.password =
+        "Please enter a password containing at least one UPPERCASE character";
+    } else if (!/^(?=.*[a-z])/.test(newPassword)) {
+      temp.password =
+        "Please enter a password containing at least one LOWERCASE character";
+    } else if (!/^(?=.*[!@#$%^&*])/.test(newPassword)) {
+      temp.password =
+        "Please enter a password containing at least one SPECIAL CASE";
+    } else if (newPassword !== repassword) {
+      temp.repassword = "Please enter the SAME passwords!";
+    }
+
+    if (newPassword != repassword) {
+      temp.repassword = "Passwords do not match";
+    }
+
+    return temp;
+  }
+
+  const cfmPasswordUpdate = () => {
+    const sendDB = async () => {
+      await updatePassword(getAuth().currentUser, newPassword)
+        .then(
+          alert("Success!", "You have successfully changed your password."),
+          Keyboard.dismiss(),
+          navigation.goBack()
+        )
+        .catch((e) => console.log(e));
+    };
+    Alert.alert("Confirm", "Are you sure you want to change your password?", [
+      { text: "No" },
+      { text: "Yes", onPress: () => sendDB() },
+    ]);
   };
 
-  useEffect(() => {
-    const fetchUserData = () => {
-      //   const usersDocRef = doc(db, "users", getAuth().currentUser.uid);
-      //   onSnapshot(usersDocRef, (doc) => {
-      //     setFirstName(doc.data().fName);
-      //     setLastName(doc.data().lName);
-      //     setNewFirstName(firstName);
-      //     setNewLastName(lastName);
-      //   });
-    };
-    fetchUserData();
-  }, []);
+  const checkIfValid = (errors) => {
+    return errors.password.length === 0 && errors.repassword.length === 0;
+  };
+
+  const handleSubmit = () => {
+    const tempErrors = getErrors();
+    setError(tempErrors);
+
+    if (checkIfValid(tempErrors)) {
+      setIsValid(true);
+      cfmPasswordUpdate();
+    } else {
+      setIsValid(false);
+    }
+  };
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView style={styles.container}>
-        <TouchableOpacity
-          style={styles.backBtn}
-          onPress={() => navigation.goBack()}
-        >
-          <AntDesign name="left" size={20} color="black" />
-        </TouchableOpacity>
         <View style={styles.headerContainer}>
+          <TouchableOpacity
+            style={styles.backBtn}
+            onPress={() => navigation.goBack()}
+          >
+            <AntDesign name="left" size={20} color="black" />
+          </TouchableOpacity>
           <Text style={styles.header}>Update Password</Text>
         </View>
         <View style={styles.inputs}>
-          <Text style={styles.inputHeader}>Current password</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              //   placeholder={firstName}
-              placeholderTextColor="black"
-              //   defaultValue={firstName}
-              onChangeText={(text) => setCurrPw(text)}
-              autoCorrect={false}
-            />
-          </View>
-          <Text style={styles.inputHeader}>New password</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              //   placeholder={lastName}
-              //   defaultValue={lastName}
-              placeholderTextColor="black"
-              onChangeText={(text) => setNewPw(text)}
-              autoCorrect={false}
-            />
-          </View>
-          <Text style={styles.inputHeader}>Repeat new password</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              //   placeholder={lastName}
-              //   defaultValue={lastName}
-              placeholderTextColor="black"
-              onChangeText={(text) => setNewNewPw(text)}
-              autoCorrect={false}
-            />
-          </View>
-          {/* <TouchableOpacity
-            style={[
-              styles.pwCfmBtn,
-              new
-                ? { backgroundColor: "grey" }
-                : { backgroundColor: "#43356B" },
-            ]}
-            disabled={
-              newFirstName + newLastName === firstName + lastName ? true : false
-            }
-            onPress={() => cfmNameChange()}
-          >
-            <Text style={{ color: "white", fontWeight: "600" }}>Confirm</Text>
-          </TouchableOpacity> */}
+          <PasswordInput
+            header={"New password"}
+            onChange={(text) => setNewPassword(text)}
+            value={newPassword}
+            error={error.password}
+          />
+          <PasswordInput
+            containerStyles={{ marginTop: 10 }}
+            header={"Repeat new password"}
+            onChange={(text) => setRepassword(text)}
+            value={repassword}
+            error={error.repassword}
+          />
         </View>
+        <TouchableOpacity
+          style={[styles.nameCfmBtn, { backgroundColor: "#43356B" }]}
+          onPress={() => handleSubmit()}
+        >
+          <Text style={{ color: "white", fontWeight: "600" }}>Confirm</Text>
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -125,57 +120,54 @@ const ChangePasswordScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    // alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   inputs: {
-    justifyContent: "center",
-    alignSelf: "center",
-    // flex: 1,
+    display: "flex",
+    flex: 1,
   },
   headerContainer: {
-    marginTop: 10,
     marginBottom: 20,
     flexDirection: "row",
+    display: "flex",
+    height: "5%",
+    alignItems: "center",
   },
   header: {
-    fontWeight: "500",
-    fontSize: 18,
-    // letterSpacing: -1,
+    fontWeight: "600",
+    fontSize: 20,
+    marginLeft: 10,
   },
   inputText: {
     padding: 13,
-    textAlign: "left",
+    flex: 1,
+    backgroundColor: "#A3A3BD",
+    borderRadius: 15,
+    height: 50,
   },
   inputHeader: {
     paddingBottom: 5,
     fontWeight: "400",
   },
   inputContainer: {
-    backgroundColor: "#A3A3BD",
-    borderRadius: 15,
     width: width - 50,
-    height: 50,
     marginBottom: 20,
+    alignItems: "center",
     paddingLeft: 10,
-    // alignItems: "center",
-    justifyContent: "center",
+    display: "flex",
+    flexDirection: "row",
   },
-  pwCfmBtn: {
-    position: "absolute",
+  nameCfmBtn: {
     borderRadius: 20,
     justifyContent: "center",
     alignSelf: "center",
-    width: width - 50,
     alignItems: "center",
     height: 50,
-    top: height - 180,
+    width: "100%",
   },
-  backBtn: {
-    position: "absolute",
-    alignSelf: "center",
-    left: 20,
-    top: 10,
-  },
+  backBtn: {},
 });
 
 export default ChangePasswordScreen;

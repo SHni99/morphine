@@ -1,23 +1,22 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Alert,
-  ActivityIndicator,
-  Image,
-  SafeAreaView,
-  ImageBackground,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { getAuth } from "firebase/auth";
-import { doc, onSnapshot } from "firebase/firestore";
-import { db, db2 } from "../firebase/firebase";
 import { Feather } from "@expo/vector-icons";
-import { ref, onValue, getDatabase } from "firebase/database";
-import PieChart from "react-native-pie-chart";
 import * as Location from "expo-location";
+import { getAuth } from "firebase/auth";
+import { onValue, ref } from "firebase/database";
+import { doc, onSnapshot } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  ImageBackground,
+  KeyboardAvoidingView,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { db, db2 } from "../firebase/firebase";
 
 const API_KEY = "f8274b0198410d536d41cc16ae3f05be";
 let weatherUrl = `http://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&q=Singapore&units=metric`;

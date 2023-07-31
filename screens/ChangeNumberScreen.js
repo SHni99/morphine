@@ -1,26 +1,34 @@
+import { AntDesign } from "@expo/vector-icons";
+import { getAuth } from "firebase/auth";
+import { doc, updateDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
 import {
-  View,
-  Text,
-  KeyboardAvoidingViewBase,
-  KeyboardAvoidingView,
-  StyleSheet,
-  TouchableOpacity,
   Alert,
   Dimensions,
   Keyboard,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { TextInput } from "react-native-gesture-handler";
-import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import FormInput from "../components/input/FormInput";
 import { db } from "../firebase/firebase";
-import { getAuth } from "firebase/auth";
 const { width, height } = Dimensions.get("screen");
-import { AntDesign } from "@expo/vector-icons";
+const ChangeNumberScreen = ({ route, navigation }) => {
+  const { number } = route.params;
+  const [newNum, setNewNum] = useState(number);
+  const [error, setError] = useState("");
+  const [isValid, setIsValid] = useState(false);
 
-const ChangeNumberScreen = ({ navigation }) => {
-  const [num, setNum] = useState("");
-  const [newNum, setNewNum] = useState("");
+  const getErrors = () => {
+    if (newNum.length != 8) {
+      return "Phone number must be a valid 8 digit number";
+    } else {
+      return "";
+    }
+  };
 
   const cfmNumChange = () => {
     const sendDB = () => {
@@ -40,55 +48,53 @@ const ChangeNumberScreen = ({ navigation }) => {
     ]);
   };
 
+  const checkIfValid = (errors) => {
+    return errors.length === 0;
+  };
+
+  const handleSubmit = () => {
+    const tempErrors = getErrors();
+    setError(tempErrors);
+
+    if (checkIfValid(tempErrors)) {
+      setIsValid(true);
+      cfmNumChange();
+    } else {
+      setIsValid(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchUserData = () => {
-      const usersDocRef = doc(db, "users", getAuth().currentUser.uid);
-      onSnapshot(usersDocRef, (doc) => {
-        setNewNum(doc.data().phoneNum);
-        setNum(doc.data().phoneNum);
-      });
-    };
-    fetchUserData();
-  }, []);
+    setError(getErrors());
+  }, [newNum]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView style={styles.container}>
-        <TouchableOpacity
-          style={styles.backBtn}
-          onPress={() => navigation.goBack()}
-        >
-          <AntDesign name="left" size={20} color="black" />
-        </TouchableOpacity>
         <View style={styles.headerContainer}>
+          <TouchableOpacity
+            style={styles.backBtn}
+            onPress={() => navigation.goBack()}
+          >
+            <AntDesign name="left" size={20} color="black" />
+          </TouchableOpacity>
           <Text style={styles.header}>Update Number</Text>
         </View>
         <View style={styles.inputs}>
-          <Text style={styles.inputHeader}>New Number</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              //   placeholder={firstName}
-              placeholderTextColor="black"
-              //   defaultValue={firstName}
-              onChangeText={(text) => setNewNum(text)}
-              autoCorrect={false}
-            />
-          </View>
-
-          <TouchableOpacity
-            style={[
-              styles.numCfmBtn,
-              newNum === num || newNum.length === 0
-                ? { backgroundColor: "grey" }
-                : { backgroundColor: "#43356B" },
-            ]}
-            disabled={newNum === num || newNum.length === 0 ? true : false}
-            onPress={() => cfmNumChange()}
-          >
-            <Text style={{ color: "white", fontWeight: "600" }}>Confirm</Text>
-          </TouchableOpacity>
+          <FormInput
+            header={"New number"}
+            onChange={(text) => setNewNum(text)}
+            value={newNum}
+            error={error}
+            keyboardType={"numeric"}
+          />
         </View>
+        <TouchableOpacity
+          style={[styles.nameCfmBtn, { backgroundColor: "#43356B" }]}
+          onPress={() => handleSubmit()}
+        >
+          <Text style={{ color: "white", fontWeight: "600" }}>Confirm</Text>
+        </TouchableOpacity>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -97,55 +103,54 @@ const ChangeNumberScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
+    // alignItems: "center",
+    paddingLeft: 20,
+    paddingRight: 20,
   },
   inputs: {
-    justifyContent: "center",
-    alignSelf: "center",
+    display: "flex",
+    flex: 1,
   },
   headerContainer: {
-    marginTop: 10,
     marginBottom: 20,
     flexDirection: "row",
+    display: "flex",
+    height: "5%",
+    alignItems: "center",
   },
   header: {
-    fontWeight: "500",
-    fontSize: 18,
-    // letterSpacing: -1,
+    fontWeight: "600",
+    fontSize: 20,
+    marginLeft: 10,
   },
   inputText: {
     padding: 13,
+    flex: 1,
+    backgroundColor: "#A3A3BD",
+    borderRadius: 15,
+    height: 50,
   },
   inputHeader: {
     paddingBottom: 5,
     fontWeight: "400",
   },
   inputContainer: {
-    backgroundColor: "#A3A3BD",
-    borderRadius: 15,
     width: width - 50,
-    height: 50,
     marginBottom: 20,
-    // alignItems: "center",
-    justifyContent: "center",
+    alignItems: "center",
     paddingLeft: 10,
+    display: "flex",
+    flexDirection: "row",
   },
-  numCfmBtn: {
-    position: "absolute",
+  nameCfmBtn: {
     borderRadius: 20,
     justifyContent: "center",
     alignSelf: "center",
-    width: width - 50,
     alignItems: "center",
     height: 50,
-    top: height - 180,
+    width: "100%",
   },
-  backBtn: {
-    position: "absolute",
-    alignSelf: "center",
-    left: 20,
-    top: 10,
-  },
+  backBtn: {},
 });
 
 export default ChangeNumberScreen;

@@ -1,21 +1,18 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  KeyboardAvoidingView,
-  Dimensions,
-  TouchableOpacity,
-  Button,
-  Alert,
-} from "react-native";
-import React, { useEffect, useState } from "react";
-import { db, db2 } from "../firebase/firebase";
-import { Feather } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { ref, set } from "firebase/database";
-import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import { AntDesign, Feather } from "@expo/vector-icons";
 import { getAuth } from "firebase/auth";
-import { AntDesign } from "@expo/vector-icons";
+import { doc, onSnapshot, setDoc } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import {
+  Alert,
+  Dimensions,
+  KeyboardAvoidingView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { db } from "../firebase/firebase";
 const { width } = Dimensions.get("screen");
 
 const Settings = ({ navigation }) => {
@@ -67,18 +64,6 @@ const Settings = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.inputs}>
-          {/* <Text style={styles.inputHeader}>First Name:</Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              // placeholder={firstName}
-              placeholderTextColor="black"
-              defaultValue={firstName}
-              onChangeText={(text) => setNewFirstName(text)}
-              autoCorrect={false}
-            />
-          </View> */}
-
           <View style={styles.sectionContainer}>
             <Text style={styles.titleText}>Name</Text>
             <View style={styles.userDataContainer}>
@@ -88,8 +73,12 @@ const Settings = ({ navigation }) => {
             </View>
 
             <TouchableOpacity
-              onPress={() => navigation.navigate("changename")}
-              // style={{ alignSelf: "center" }}
+              onPress={() =>
+                navigation.navigate("changename", {
+                  firstName: firstName,
+                  lastName: lastName,
+                })
+              }
             >
               <AntDesign name="right" size={20} color="black" />
             </TouchableOpacity>
@@ -99,7 +88,11 @@ const Settings = ({ navigation }) => {
             <View style={styles.userDataContainer}>
               <Text style={styles.userData}>{phoneNum}</Text>
             </View>
-            <TouchableOpacity onPress={() => navigation.navigate("changenum")}>
+            <TouchableOpacity
+              onPress={() =>
+                navigation.navigate("changenum", { number: phoneNum })
+              }
+            >
               <AntDesign name="right" size={20} color="black" />
             </TouchableOpacity>
           </View>

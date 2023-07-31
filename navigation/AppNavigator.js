@@ -1,8 +1,6 @@
-import React, { Component } from "react";
-import * as Screens from "../screens/index";
-import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import BottomTab from "./BottomTab";
+import React from "react";
+import * as Screens from "../screens/index";
 import DrawerNavigator from "./DrawerNavigator";
 const Stack = createNativeStackNavigator();
 
@@ -37,6 +35,11 @@ const AppNavigator = () => {
       <Stack.Screen
         name="changepw"
         component={Screens.ChangePasswordScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="change"
+        component={Screens.ChangeDetailsScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
