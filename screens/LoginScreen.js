@@ -16,6 +16,7 @@ import { authentication, db2, firebase } from "../firebase/firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import Toast from "react-native-root-toast";
 import { ref, set } from "firebase/database";
+import FormInput from "../components/input/FormInput";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -79,41 +80,26 @@ const LoginScreen = () => {
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
-        <View style={{ display: "flex", alignItems: "center" }}>
-          <Image source={require("../assets/FG.png")} style={styles.logo} />
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Email"
-              placeholderTextColor="black"
-              onChangeText={(email) => setEmail(email)}
-              autoCorrect={false}
-            />
-          </View>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.inputText}
-              placeholder="Password"
-              placeholderTextColor="black"
-              secureTextEntry={true}
-              autoCapitalize="none"
-              autoCorrect={false}
-              onChangeText={(password) => setPassword(password)}
-            />
-          </View>
-          <View style={styles.signupcontainer}>
-            <Text>Don't have an account?</Text>
-            <TouchableOpacity
-              style={styles.signupbutton}
-              onPress={() => navigation.navigate("signup")}
-            >
-              <Text style={styles.signuptext}>Sign up here</Text>
-            </TouchableOpacity>
-          </View>
-          <TouchableOpacity style={styles.loginbutton} onPress={handleLogin}>
-            <Text style={styles.logintext}>LOGIN</Text>
+        <Image source={require("../assets/FG.png")} style={styles.logo} />
+        <View style={styles.inputs}>
+          <FormInput header={"Email"} onChange={(text) => setEmail(text)} />
+          <FormInput
+            header={"Password"}
+            onChange={(text) => setPassword(password)}
+          />
+        </View>
+        <View style={styles.signupcontainer}>
+          <Text>Don't have an account?</Text>
+          <TouchableOpacity
+            style={styles.signupbutton}
+            onPress={() => navigation.navigate("signup")}
+          >
+            <Text style={styles.signuptext}>Sign up here</Text>
           </TouchableOpacity>
         </View>
+        <TouchableOpacity style={styles.loginbutton} onPress={handleLogin}>
+          <Text style={styles.logintext}>LOGIN</Text>
+        </TouchableOpacity>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -123,10 +109,19 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    marginTop: 10,
     justifyContent: "center",
+    padding: 20,
   },
-
+  content: {
+    // display: "flex",
+    alignItems: "center",
+  },
+  inputs: {
+    display: "flex",
+    width: "100%",
+    paddingLeft: 20,
+    paddingRight: 20,
+  },
   logo: {
     width: 160,
     height: 80,
