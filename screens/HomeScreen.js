@@ -169,6 +169,7 @@ const HomeScreen = ({ navigation }) => {
                   marginTop: 20,
                   justifyContent: "center",
                   flex: 1,
+                  alignItems: "center",
                 }}
               >
                 <Image
@@ -180,10 +181,18 @@ const HomeScreen = ({ navigation }) => {
                   style={!isPanic && !isFall ? styles.whiteLogo : styles.logo}
                 />
                 <Text style={[styles.welcometext]}>{getWelcomeText()}</Text>
-                <Text style={styles.batteryPercent}>
-                  Device Status: {MPUMsg.toLocaleUpperCase()}{" "}
-                  {MPUMsg === "on" ? "\u{1F7E2}" : "\u{1F534}"}
-                </Text>
+                <View
+                  style={[
+                    styles.batteryPercentContainer,
+                    MPUMsg === "on"
+                      ? styles.batteryPercentContainerOn
+                      : styles.batteryPercentContainerOff,
+                  ]}
+                >
+                  <Text style={styles.batteryPercent}>
+                    Device Status: {MPUMsg.toLocaleUpperCase()}{" "}
+                  </Text>
+                </View>
               </View>
 
               <TouchableOpacity
@@ -332,7 +341,12 @@ const styles = StyleSheet.create({
     paddingRight: 20,
     backgroundColor: "#f2f2fc",
   },
-
+  onOffBtn: {
+    height: 50,
+    width: 50,
+    borderRadius: "100%",
+    position: "absolute",
+  },
   mainWeather: {
     marginRight: 10,
   },
@@ -372,8 +386,19 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "white",
   },
-  batteryPercent: {
+  batteryPercentContainer: {
     marginTop: 10,
+    padding: 10,
+    width: 200,
+    borderRadius: 15,
+  },
+  batteryPercentContainerOn: {
+    backgroundColor: "#6B835E",
+  },
+  batteryPercentContainerOff: {
+    backgroundColor: "#E1867F",
+  },
+  batteryPercent: {
     color: "white",
     fontSize: 16,
     fontWeight: "500",

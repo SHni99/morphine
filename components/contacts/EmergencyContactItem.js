@@ -41,23 +41,8 @@ const EmergencyContactItem = ({ item, index }) => {
     Linking.openURL(url).catch((e) => console.log(e));
   };
   return (
-    <View
-      key={item.index + mobile}
-      style={{
-        flexDirection: "row",
-        marginBottom: 20,
-        padding: 20,
-        alignItems: "center",
-        backgroundColor: "#f7efe9",
-        flexDirection: "row",
-        justifyContent: "space-between",
-        marginLeft: 10,
-        marginRight: 10,
-        borderRadius: 25,
-        height: 60,
-      }}
-    >
-      <Text>
+    <View key={item.index + mobile} style={styles.container}>
+      <Text style={{ fontWeight: "500" }}>
         {item.firstName} {item.lastName}
       </Text>
       <View style={styles.btns}>
@@ -68,7 +53,7 @@ const EmergencyContactItem = ({ item, index }) => {
           <MaterialIcons name="delete" size={22} color="grey" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.callBtn} onPress={() => triggerCall()}>
-          <Ionicons name="call" size={20} color="green" />
+          <Ionicons name="call" size={20} color="#ACBDA3" />
         </TouchableOpacity>
       </View>
     </View>
@@ -76,6 +61,17 @@ const EmergencyContactItem = ({ item, index }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: "#faece1",
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 20,
+    borderRadius: 20,
+    marginBottom: 20,
+    alignItems: "center",
+  },
   callBtn: {},
   btns: {
     flexDirection: "row",

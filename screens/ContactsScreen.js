@@ -67,13 +67,16 @@ const ContactsScreen = () => {
         <View
           style={{
             backgroundColor: "white",
-            paddingTop: 20,
             height: "100%",
-            // alignItems: "center",
+            paddingTop: 20,
+            paddingLeft: 20,
+            paddingRight: 20,
+            paddingBottom: 20,
           }}
         >
           {emergencyContacts.length > 0 ? (
             <FlatList
+              style={{ width: "100%", height: "100%" }}
               data={emergencyContacts}
               keyExtractor={(item) => item.index}
               renderItem={({ item, index }) => {
@@ -83,8 +86,16 @@ const ContactsScreen = () => {
               }}
             />
           ) : (
-            <Text style={{ fontSize: 16, color: "grey", textAlign: "center" }}>
-              You have not added any emergency contacts
+            <Text
+              style={{
+                fontSize: 16,
+                color: "grey",
+                textAlign: "center",
+                width: "80%",
+              }}
+            >
+              You have not added any emergency contacts.{"\n"}Click the top
+              right icon to add an emergency contact.
             </Text>
           )}
         </View>

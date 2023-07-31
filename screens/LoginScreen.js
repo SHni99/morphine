@@ -17,6 +17,7 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import Toast from "react-native-root-toast";
 import { ref, set } from "firebase/database";
 import FormInput from "../components/input/FormInput";
+import PasswordInput from "../components/input/PasswordInput";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
@@ -83,7 +84,7 @@ const LoginScreen = () => {
         <Image source={require("../assets/FG.png")} style={styles.logo} />
         <View style={styles.inputs}>
           <FormInput header={"Email"} onChange={(text) => setEmail(text)} />
-          <FormInput
+          <PasswordInput
             header={"Password"}
             onChange={(text) => setPassword(password)}
           />
