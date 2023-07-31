@@ -13,33 +13,40 @@ import { Entypo } from "@expo/vector-icons";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { useNavigation } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
+import { Alert } from "react-native";
 
 const Drawer = createDrawerNavigator();
 
 const DrawerNavigator = () => {
   const navigation = useNavigation();
   const handleSignOut = () => {
-    const auth = getAuth();
-    signOut(auth)
-      .then(() => {
-        onAuthStateChanged(auth, (user) => {
-          if (user) {
-            console.log(`Signed out of ${user.email}`);
-          }
+    const logOut = () => {
+      const auth = getAuth();
+      signOut(auth)
+        .then(() => {
+          onAuthStateChanged(auth, (user) => {
+            if (user) {
+              console.log(`Logged out of ${user.email}`);
+            }
+          });
+          let toast = Toast.show("You have logged out", {
+            duration: Toast.durations.SHORT,
+            backgroundColor: "red",
+          });
+
+          setTimeout(function hideToast() {
+            Toast.hide(toast);
+          }, 1500);
+          navigation.navigate("login");
+        })
+        .catch((error) => {
+          alert(error.message);
         });
-        let toast = Toast.show('You have signed out', {
-          duration: Toast.durations.SHORT,
-          backgroundColor: 'red',
-        });
-        
-        setTimeout(function hideToast() {
-          Toast.hide(toast);
-        }, 1500);
-        navigation.navigate("login");
-      })
-      .catch((error) => {
-        alert(error.message);
-      });
+    };
+    Alert.alert("Confirm", "Are you sure you want to log out?", [
+      { text: "No" },
+      { text: "Yes", onPress: () => logOut() },
+    ]);
   };
 
   function CustomDrawerContent(props) {
@@ -50,11 +57,13 @@ const DrawerNavigator = () => {
           label="Log out"
           onPress={handleSignOut}
           icon={({ focused }) => {
-            return <AntDesign
-              name="logout"
-              size={18}
-              color={focused ? "white" : "grey"}
-            />;
+            return (
+              <AntDesign
+                name="logout"
+                size={18}
+                color={focused ? "white" : "grey"}
+              />
+            );
           }}
         />
       </DrawerContentScrollView>
