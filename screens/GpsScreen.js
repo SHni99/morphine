@@ -9,6 +9,7 @@ import {
 } from "expo-location";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Context as LocationContext } from "../components/LocationContext";
+import DefaultMarkers from "../components/DefaultMarkers";
 
 const GpsScreen = () => {
   const { addLocation } = useContext(LocationContext);
@@ -39,8 +40,9 @@ const GpsScreen = () => {
   }, []);
 
   return (
-    <SafeAreaView forceInset={{ top: "always" }}>
-      <Map />
+    <SafeAreaView style={{ flex: 1 }}>
+      {/* <Map /> */}
+      <DefaultMarkers />
       {err ? <Text>Please enable your location</Text> : null}
     </SafeAreaView>
   );

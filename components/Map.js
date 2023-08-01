@@ -5,7 +5,7 @@ import { Context as LocationContext } from "./LocationContext";
 
 const Map = () => {
   const {
-    state: { currentLocation},
+    state: { currentLocation },
   } = useContext(LocationContext);
   if (!currentLocation) {
     return <ActivityIndicator size="large" style={{ marginTop: 200 }} />;
@@ -30,18 +30,20 @@ const Map = () => {
       <MapView
         style={styles.map}
         initialRegion={{
-          ...initialLocation,
+          latitude: 37.78825,
+          longitude: -122.4324,
+          latitudeDelta: 0.0922,
+          longitudeDelta: 0.0421,
         }}
       >
         <Circle
-        //set to currentLocation.cords for real-time reading
+          //set to currentLocation.cords for real-time reading
           center={currentLocation.cords}
           radius={20}
           strokeColor="black"
           fillColor="#fed42855"
         />
-        <MapMarker coordinate={currentLocation.cords}
-        />
+        <MapMarker coordinate={currentLocation.cords} />
       </MapView>
     </View>
   );
@@ -57,7 +59,7 @@ const styles = StyleSheet.create({
   },
   map: {
     ...StyleSheet.absoluteFillObject,
-    position: "absolute"
+    position: "absolute",
   },
 });
 
