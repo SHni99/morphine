@@ -43,7 +43,7 @@ const ContactItem = ({ item, index, selected }) => {
 
   return (
     <View
-      key={index}
+      key={name + mobile}
       style={{
         flexDirection: "row",
         marginBottom: 20,

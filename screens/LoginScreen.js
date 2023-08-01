@@ -65,7 +65,10 @@ const LoginScreen = () => {
         }, 1500);
         navigation.navigate("hometab");
       })
-      .catch((error) => alert(error.message));
+      .catch((error) => {
+        console.log(error);
+        alert(error.message);
+      });
   };
 
   // auto logs in when user alr has an acc

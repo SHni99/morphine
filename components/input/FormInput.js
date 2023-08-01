@@ -21,6 +21,7 @@ const FormInput = ({
         autoCorrect={false}
         value={value}
         keyboardType={keyboardType}
+        autoCapitalize="none"
       />
       <Text style={styles.error}>{error}</Text>
     </View>

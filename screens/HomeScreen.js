@@ -448,11 +448,11 @@ const styles = StyleSheet.create({
   },
   emergencyDesc: { fontStyle: "italic" },
   activityIndicator: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",
   },
-  activated: { color: "#D58927" },
+  activated: { color: "#D58927", fontSize: 16 },
   notActivated: { fontSize: 18, color: "#6B835E" },
   emergencyContainer: {
     backgroundColor: "#f2f2fc",
@@ -462,6 +462,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flex: 1,
     padding: 20,
+    paddingTop: 0,
   },
 
   btnHeader: {

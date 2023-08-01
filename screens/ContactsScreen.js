@@ -72,11 +72,17 @@ const ContactsScreen = () => {
             paddingLeft: 20,
             paddingRight: 20,
             paddingBottom: 20,
+            alignItems: "center",
+            display: "flex",
+            justifyContent: "center",
           }}
         >
           {emergencyContacts.length > 0 ? (
             <FlatList
-              style={{ width: "100%", height: "100%" }}
+              style={{
+                width: "100%",
+                height: "100%",
+              }}
               data={emergencyContacts}
               keyExtractor={(item) => item.index}
               renderItem={({ item, index }) => {
