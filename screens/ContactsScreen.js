@@ -40,6 +40,7 @@ const ContactsScreen = () => {
     };
     getEmergencyContacts();
   }, [!isModalVisible]);
+
   return (
     <View
       style={{
@@ -84,7 +85,6 @@ const ContactsScreen = () => {
                 height: "100%",
               }}
               data={emergencyContacts}
-              keyExtractor={(item) => item.index}
               renderItem={({ item, index }) => {
                 return (
                   <EmergencyContactItem item={item} index={index} key={index} />

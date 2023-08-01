@@ -41,20 +41,25 @@ const EmergencyContactItem = ({ item, index }) => {
     Linking.openURL(url).catch((e) => console.log(e));
   };
   return (
-    <View key={item.index + mobile} style={styles.container}>
-      <Text style={{ fontWeight: "500" }}>
-        {item.firstName} {item.lastName}
-      </Text>
-      <View style={styles.btns}>
-        <TouchableOpacity
-          style={styles.deleteBtn}
-          onPress={() => removeEmergency()}
-        >
-          <MaterialIcons name="delete" size={22} color="grey" />
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.callBtn} onPress={() => triggerCall()}>
-          <Ionicons name="call" size={20} color="#ACBDA3" />
-        </TouchableOpacity>
+    <View key={name + mobile}>
+      <View style={styles.container}>
+        <Text style={{ fontWeight: "500" }}>
+          {item.firstName} {item.lastName}
+        </Text>
+        <View style={styles.btns}>
+          <TouchableOpacity
+            style={styles.deleteBtn}
+            onPress={() => removeEmergency()}
+          >
+            <MaterialIcons name="delete" size={22} color="grey" />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.callBtn}
+            onPress={() => triggerCall()}
+          >
+            <Ionicons name="call" size={20} color="#ACBDA3" />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );

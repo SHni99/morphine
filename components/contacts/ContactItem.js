@@ -42,38 +42,43 @@ const ContactItem = ({ item, index, selected }) => {
   };
 
   return (
-    <View
-      key={name + mobile}
-      style={{
-        flexDirection: "row",
-        marginBottom: 20,
-        padding: 10,
-        alignItems: "center",
-        // backgroundColor: "grey",
-        // flexDirection: "row",
-        justifyContent: "space-between",
-        marginLeft: 10,
-        marginRight: 15,
-      }}
-    >
-      <View style={styles.nameContainer}>
-        <TouchableOpacity
-          style={styles.selectBtn}
-          onPress={() => toggleSelection()}
-        >
-          {!isSelected ? (
-            <Ionicons name="radio-button-off" size={20} color="black" />
-          ) : (
-            <Ionicons name="radio-button-on-outline" size={20} color="black" />
-          )}
-        </TouchableOpacity>
-        <View style={styles.name}>
-          <Text style={{ fontWeight: "bold" }}>{name}</Text>
+    <View key={index + mobile}>
+      <View
+        style={{
+          flexDirection: "row",
+          marginBottom: 20,
+          padding: 10,
+          alignItems: "center",
+          // backgroundColor: "grey",
+          // flexDirection: "row",
+          justifyContent: "space-between",
+          marginLeft: 10,
+          marginRight: 15,
+        }}
+      >
+        <View style={styles.nameContainer} key={index}>
+          <TouchableOpacity
+            style={styles.selectBtn}
+            onPress={() => toggleSelection()}
+          >
+            {!isSelected ? (
+              <Ionicons name="radio-button-off" size={20} color="black" />
+            ) : (
+              <Ionicons
+                name="radio-button-on-outline"
+                size={20}
+                color="black"
+              />
+            )}
+          </TouchableOpacity>
+          <View style={styles.name}>
+            <Text style={{ fontWeight: "bold" }}>{name}</Text>
+          </View>
         </View>
-      </View>
-      <View style={styles.numbersContainer}>
-        {mobile ? <Text>Mobile: {mobile}</Text> : <View></View>}
-        {home ? <Text>Home: {home}</Text> : <View></View>}
+        <View style={styles.numbersContainer}>
+          {mobile ? <Text>Mobile: {mobile}</Text> : <View></View>}
+          {home ? <Text>Home: {home}</Text> : <View></View>}
+        </View>
       </View>
     </View>
   );

@@ -235,15 +235,9 @@ const ContactsPicker = (props) => {
         >
           <FlatList
             data={filteredData}
-            keyExtractor={(item) => item.index}
             renderItem={({ item, index }) => {
               return (
-                <ContactItem
-                  item={item}
-                  index={index}
-                  key={index}
-                  selected={selected}
-                />
+                <ContactItem item={item} index={index} selected={selected} />
               );
             }}
           />

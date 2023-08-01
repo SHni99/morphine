@@ -124,7 +124,7 @@ const HomeScreen = ({ navigation }) => {
     });
   }, []);
 
-  if (!forecast) {
+  if (!forecast || !user) {
     return (
       <SafeAreaView style={styles.loading}>
         <ActivityIndicator size="large" />
