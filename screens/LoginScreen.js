@@ -50,7 +50,8 @@ const LoginScreen = () => {
 */
   //var userStatusDatabaseRef = firebase.database().ref('/status/' + uid);
 
-  const handleLogin = () => {
+  const handleLogin = (email, password) => {
+    console.log(password);
     signInWithEmailAndPassword(authentication, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
@@ -89,7 +90,8 @@ const LoginScreen = () => {
           <FormInput header={"Email"} onChange={(text) => setEmail(text)} />
           <PasswordInput
             header={"Password"}
-            onChange={(text) => setPassword(password)}
+            onChange={(text) => setPassword(text)}
+            value={password}
           />
         </View>
         <View style={styles.signupcontainer}>
@@ -101,7 +103,10 @@ const LoginScreen = () => {
             <Text style={styles.signuptext}>Sign up here</Text>
           </TouchableOpacity>
         </View>
-        <TouchableOpacity style={styles.loginbutton} onPress={handleLogin}>
+        <TouchableOpacity
+          style={styles.loginbutton}
+          onPress={() => handleLogin(email, password)}
+        >
           <Text style={styles.logintext}>LOGIN</Text>
         </TouchableOpacity>
       </View>
