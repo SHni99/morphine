@@ -15,7 +15,7 @@ Notifications.setNotificationHandler({
     shouldSetBadge: false,
   }),
 });
-
+/*
 // Can use this function below OR use Expo's Push Notification Tool from: https://expo.dev/notifications
 async function sendPushNotification(expoPushToken) {
   const message = {
@@ -67,13 +67,13 @@ async function registerForPushNotificationsAsync() {
 
   return token;
 }
-
+*/
 export default function App(){
   const [expoPushToken, setExpoPushToken] = useState('');
   const [notification, setNotification] = useState(false);
   const notificationListener = useRef();
   const responseListener = useRef();
-
+/*
   useEffect(() => {
     registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
@@ -90,7 +90,7 @@ export default function App(){
       Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
-
+*/
   return (
     <LocationProvider>
         <RootSiblingParent>
