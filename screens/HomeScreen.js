@@ -33,6 +33,7 @@ const HomeScreen = ({ navigation }) => {
   const [lastPanicDate, setLastPanicDate] = useState();
   const [MPUMsg, setMPUMsg] = useState("off");
   const [MPUval, setMPUval] = useState("");
+  const [MPUval2, setMPUval2] = useState("");
 
   const loadingForecast = async () => {
     setRefreshing(true);
@@ -107,22 +108,26 @@ const HomeScreen = ({ navigation }) => {
     );
 
     onValue(MPUref, (snapshot) => {
-      setMPUval(snapshot.val());
-      if (MPUval == snapshot.val()) {
-        const timer = setTimeout(() => setMPUMsg("off"), 5000);
-        return () => {
-          if (MPUval == snapshot.val) {
-            Alert.alert("Device has shut down");
-            clearTimeout(timer);
-          }
-        };
+      //setMPUval2(snapshot.val());
+      if (MPUval == null) {
+        setMPUval(snapshot.val());
+      } else if (MPUval != null && MPUval != snapshot.val()) {
+        setMPUMsg("on");
+        setMPUval(snapshot.val());
       } else {
-        if (MPUMsg != "on") {
-          setMPUMsg("on");
-        }
+        const timer = setTimeout(() => setMPUval2(snapshot.val()), 5000);
+        if (MPUMsg != "off" && MPUval == MPUval2) {
+          Alert.alert("Device is shutting down");
+          setMPUMsg("off");
+        } 
+        return () => {
+          clearTimeout(timer);
+        };
+        
       }
     });
-  }, []);
+    
+  }, [MPUval, MPUval2]);
 
   if (!forecast || !user) {
     return (
