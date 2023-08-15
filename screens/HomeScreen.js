@@ -75,7 +75,7 @@ const HomeScreen = ({ navigation }) => {
     );
     onValue(fallRef, (snapshot) => {
       setFallMsg(snapshot.val()[0]);
-      if (snapshot.val()[0] === "Fall Detected") {
+      if (snapshot.val()[0] === "Fall detected") {
         setIsFall(true);
         setLastFallDate(
           new Date().toLocaleString("en-GB", { timeZone: "SST" })
@@ -119,14 +119,12 @@ const HomeScreen = ({ navigation }) => {
         if (MPUMsg != "off" && MPUval == MPUval2) {
           Alert.alert("Device is shutting down");
           setMPUMsg("off");
-        } 
+        }
         return () => {
           clearTimeout(timer);
         };
-        
       }
     });
-    
   }, [MPUval, MPUval2]);
 
   if (!forecast || !user) {
