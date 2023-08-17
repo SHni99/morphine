@@ -5,16 +5,7 @@ import { RootSiblingParent } from "react-native-root-siblings";
 import { Provider as LocationProvider } from "./components/LocationContext";
 import { useState, useEffect, useRef } from 'react';
 import { Platform, StyleSheet } from 'react-native';
-import * as Device from 'expo-device';
-import * as Notifications from 'expo-notifications';
 
-Notifications.setNotificationHandler({
-  handleNotification: async () => ({
-    shouldShowAlert: true,
-    shouldPlaySound: false,
-    shouldSetBadge: false,
-  }),
-});
 /*
 // Can use this function below OR use Expo's Push Notification Tool from: https://expo.dev/notifications
 async function sendPushNotification(expoPushToken) {

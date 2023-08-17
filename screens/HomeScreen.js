@@ -3,7 +3,9 @@ import * as Location from "expo-location";
 import { getAuth } from "firebase/auth";
 import { onValue, ref } from "firebase/database";
 import { doc, onSnapshot } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
 import {
   ActivityIndicator,
   Alert,
@@ -15,12 +17,22 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Platform,
+  Button
 } from "react-native";
 import { db, db2 } from "../firebase/firebase";
 
 const API_KEY = "f8274b0198410d536d41cc16ae3f05be";
 let weatherUrl = `http://api.openweathermap.org/data/2.5/weather?appid=${API_KEY}&q=Singapore&units=metric`;
 const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 const HomeScreen = ({ navigation }) => {
   const [user, setUser] = useState(null);
@@ -34,6 +46,10 @@ const HomeScreen = ({ navigation }) => {
   const [MPUMsg, setMPUMsg] = useState("off");
   const [MPUval, setMPUval] = useState("");
   const [MPUval2, setMPUval2] = useState("");
+  const [expoPushToken, setExpoPushToken] = useState('');
+  const [notification, setNotification] = useState(false);
+  const notificationListener = useRef();
+  const responseListener = useRef();
 
   const loadingForecast = async () => {
     setRefreshing(true);
@@ -59,8 +75,78 @@ const HomeScreen = ({ navigation }) => {
     setRefreshing(false);
   };
 
+  const sendNotification = () => {
+    //users must log in to Expo to remove handling exceptions
+    registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+    notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+      setNotification(notification);
+    });
+
+    responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+      console.log(response);
+    });
+
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener.current);
+      Notifications.removeNotificationSubscription(responseListener.current);
+    };
+  }
+
+  async function schedulePushNotification() {
+
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: "🆘🚨🆘🚨🆘 FallGuard S.O.S 🆘🚨🆘🚨🆘",
+        body: "Mama has fallen!!\nCheck her location in app now ",
+        sound: 'alertsound.wav',
+      },
+      trigger: { seconds: 3 },
+    });
+  }    
+
+  async function registerForPushNotificationsAsync() {
+    let token;
+  
+    if (Platform.OS === 'android') {
+      await Notifications.setNotificationChannelAsync('default', {
+        name: 'default',
+        importance: Notifications.AndroidImportance.MAX,
+        vibrationPattern: [0, 250, 250, 250],
+        lightColor: '#FF231F7C',
+      });
+    }
+  
+    if (Device.isDevice) {
+      const { status: existingStatus } = await Notifications.getPermissionsAsync();
+      let finalStatus = existingStatus;
+      if (existingStatus !== 'granted') {
+        const { status } = await Notifications.requestPermissionsAsync({
+          ios: {
+            allowAlert: true,
+            allowBadge: true,
+            allowSound: true,
+          },
+        })
+        finalStatus = status;
+      }
+      if (finalStatus !== 'granted') {
+        alert('Failed to get push token for push notification!');
+        return;
+      }
+      token = (await Notifications.getExpoPushTokenAsync()).data;
+      //console.log(token);
+    } else {
+      alert('Must use physical device for Push Notifications');
+    }
+  
+    return token;
+  }
+
   useEffect(() => {
     loadingForecast();
+
+    sendNotification(); //request for permission to send notification
 
     // get users data
     const usersDocRef = doc(db, "users", getAuth().currentUser.uid);
@@ -76,6 +162,7 @@ const HomeScreen = ({ navigation }) => {
     onValue(fallRef, (snapshot) => {
       setFallMsg(snapshot.val()[0]);
       if (snapshot.val()[0] === "Fall detected") {
+        schedulePushNotification();
         setIsFall(true);
         setLastFallDate(
           new Date().toLocaleString("en-GB", { timeZone: "SST" })
